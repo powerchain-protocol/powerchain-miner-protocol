@@ -43,10 +43,10 @@ fi
 
 if command -v pnpm >/dev/null 2>&1; then
   PNPM_VERSION="$(pnpm --version 2>/dev/null || true)"
-  if [[ "$PNPM_VERSION" == "11.22.0" ]]; then
+  if [[ "$PNPM_VERSION" == "11.23.0" ]]; then
     ok "pnpm $PNPM_VERSION"
   else
-    warn "pnpm ${PNPM_VERSION:-unknown}; packageManager pins 11.22.0"
+    warn "pnpm ${PNPM_VERSION:-unknown}; packageManager pins 11.23.0"
   fi
 else
   warn "pnpm shim is not active yet; run corepack enable"

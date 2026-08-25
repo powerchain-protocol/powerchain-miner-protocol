@@ -1,53 +1,78 @@
-# Documentation
+# PowerChain Documentation
+
+Canonical product version: `1.0.0`.
 
 ## Start here
-- [User Guide](USER-GUIDE.md)
+
+- [Root README](../README.md)
 - [Installation](INSTALLATION.md)
-- [Operator Guide](OPERATOR-GUIDE.md)
 - [Developer Guide](DEVELOPER-GUIDE.md)
-
-## Protocol
-- [Proof of Energy](PROOF-OF-ENERGY.md)
-- [Architecture](RENEWABLE-MINER-ARCHITECTURE.md)
-- [Backend, RBAC & Rewards](BACKEND-RBAC-REWARDS.md)
-- [Security](SECURITY.md)
-
-## Operations
-- [Linux](LINUX.md)
-- [Integrations & EMS](INTEGRATIONS.md)
-- [Commands](COMMANDS.md)
-- [Testing](TESTING.md)
-- [Deployment](DEPLOYMENT.md)
-- [Migration to v0.4](MIGRATION-v0.4.md)
+- [Operator Guide](OPERATOR-GUIDE.md)
+- [User Guide](USER-GUIDE.md)
 - [Troubleshooting](TROUBLESHOOTING.md)
 
-## Network rule
+## Architecture and protocol
 
-Devnet and mainnet-beta must use separate program IDs, MINER mints, treasuries, verifier
-keys and deployment manifests.
-- [Verifier Worker](VERIFIER.md)
-- [Observability](OBSERVABILITY.md)
-- [Signed Updates](UPDATES.md)
-- [Migration to v0.5](MIGRATION-v0.5.md)
-- [Evidence Verification](EVIDENCE-VERIFICATION.md)
-- [Migration to v0.6](MIGRATION-v0.6.md)
+- [Renewable Miner Architecture](RENEWABLE-MINER-ARCHITECTURE.md)
+- [Miner Anchor Program](../programs/miner/README.md)
+- [Canonical Miner Protocol Package](../packages/powerchain-protocol/miner/README.md)
+- [Proof of Energy](PROOF-OF-ENERGY.md)
 - [Control Plane Boundaries](CONTROL-PLANE.md)
 - [Logic & Functions](LOGIC-FUNCTIONS.md)
-- [Migration to v0.7](MIGRATION-v0.7.md)
-- [Signed Attestation & Quorum](ATTESTATION-QUORUM.md)
 - [Device ↔ Solana Chain Binding](CHAIN-BINDING.md)
-- [Migration to v0.8](MIGRATION-v0.8.md)
-- [Tamper-Evident Audit Integrity](AUDIT-INTEGRITY.md)
+- [Claim Settlement v1](CLAIM-SETTLEMENT-v1.md)
+
+## Evidence, rewards and audit
+
+- [Backend, RBAC & Rewards](BACKEND-RBAC-REWARDS.md)
+- [Evidence Verification](EVIDENCE-VERIFICATION.md)
+- [Signed Attestation & Quorum](ATTESTATION-QUORUM.md)
+- [Settlement Verification](SETTLEMENT-VERIFICATION.md)
+- [Proof Settlement Leases & Durable Intents](SETTLEMENT-LEASES.md)
+- [Reward Claim Approval Policy](CLAIM-APPROVALS.md)
 - [Financial Idempotency](FINANCIAL-IDEMPOTENCY.md)
-- [Reward Settlement Verification](SETTLEMENT-VERIFICATION.md)
+- [Tamper-Evident Audit Integrity](AUDIT-INTEGRITY.md)
 - [Meter / EMS Source Rotation](SOURCE-ROTATION.md)
-- [Migration to v0.9](MIGRATION-v0.9.md)
-- [Canonical MINER Claim Settlement v1](CLAIM-SETTLEMENT-v1.md)
-- [Migration to v1.0](MIGRATION-v1.0.md)
-- [v1.0 Release Notes](RELEASE-NOTES-v1.0.md)
-- [Design Guide](DESIGN-GUIDE.md)
-- [Monorepo](MONOREPO.md)
+
+## Agent Compute and agents
+
 - [Agent Compute](AGENT-COMPUTE.md)
 - [Available Models](AVAILABLE-MODELS.md)
 - [Agent Setup](AGENT-SETUP.md)
+- [Shared Skills](../skills/README.md)
+
+## Applications and design
+
+- [Monorepo](MONOREPO.md)
+- [Design Guide](DESIGN-GUIDE.md)
+- [Docker](../docker/README.md)
+- [Integrations & EMS](INTEGRATIONS.md)
+
+## Operations and release
+
+- [Security](SECURITY.md)
+- [Observability](OBSERVABILITY.md)
+- [Signed Updates](UPDATES.md)
+- [Linux](LINUX.md)
+- [Commands](COMMANDS.md)
+- [Testing](TESTING.md)
+- [Deployment](DEPLOYMENT.md)
+- [Dependency Baseline](DEPENDENCIES.md)
 - [Canonical v1.0.0 Release Notes](RELEASE-NOTES-v1.0.0.md)
+- [Changelog](../CHANGELOG.md)
+
+## Migration history
+
+Migration documents are retained as internal schema/protocol evolution history. They do not change the public product version.
+
+- [v0.4](MIGRATION-v0.4.md)
+- [v0.5](MIGRATION-v0.5.md)
+- [v0.6](MIGRATION-v0.6.md)
+- [v0.7](MIGRATION-v0.7.md)
+- [v0.8](MIGRATION-v0.8.md)
+- [v0.9](MIGRATION-v0.9.md)
+- [v1.0](MIGRATION-v1.0.md)
+
+## Network isolation rule
+
+Devnet and Mainnet-Beta must use separate program IDs, reward mints, treasuries, verifier identities, RPC configuration, and deployment manifests.

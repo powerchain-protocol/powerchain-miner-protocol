@@ -71,7 +71,7 @@ http
           error: {
             type: "invalid_request_error",
             message:
-              "Streaming is not enabled in the v1.3 local adapter.",
+              "Streaming is not enabled in the canonical v1.0.0 local adapter.",
           },
         }),
       );

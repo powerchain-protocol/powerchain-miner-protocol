@@ -78,7 +78,7 @@ pnpm bootstrap
 
 The bootstrap:
 
-- pins pnpm 11.22.0;
+- pins pnpm 11.23.0;
 - creates missing local env files;
 - validates the committed dependency build-script policy;
 - installs dependencies once;

@@ -1,19 +1,173 @@
+name: powerchain-miner
+
+x-workspace: &workspace
+  image: powerchain/miner-workspace:1.0.0
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+    args:
+      NODE_IMAGE: node:24.19.0-bookworm-slim
+      PNPM_VERSION: 11.23.0
+  init: true
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  networks:
+    - powerchain
+
 services:
   postgres:
-    image: postgres:17-alpine
+    image: postgres:17.11-alpine3.24
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: powerchain_miner
-      POSTGRES_USER: powerchain
-      POSTGRES_PASSWORD: powerchain
+      POSTGRES_DB: ${POSTGRES_DB:-powerchain_miner}
+      POSTGRES_USER: ${POSTGRES_USER:-powerchain}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-powerchain-local-dev}
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
-      - miner_postgres:/var/lib/postgresql/data
+      - powerchain_postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U powerchain -d powerchain_miner"]
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
       interval: 5s
       timeout: 3s
-      retries: 20
+      retries: 30
+      start_period: 5s
+    networks:
+      - powerchain
+
+  backend:
+    <<: *workspace
+    command: ["/workspace/docker/entrypoint-backend.sh"]
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3100
+      DATABASE_URL: postgres://${POSTGRES_USER:-powerchain}:${POSTGRES_PASSWORD:-powerchain-local-dev}@postgres:5432/${POSTGRES_DB:-powerchain_miner}
+      JWT_SECRET: ${JWT_SECRET:-powerchain-local-jwt-secret-change-this-000000000000}
+      JWT_ISSUER: powerchain-miner-api
+      JWT_AUDIENCE: powerchain-miner-console
+      CORS_ORIGINS: http://localhost:3000,http://localhost:3002
+      SUPERADMIN_EMAIL: ${SUPERADMIN_EMAIL:-admin@powerchain.local}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-change-this-local-password}
+      POWERCHAIN_NETWORK: ${POWERCHAIN_NETWORK:-devnet}
+      POWERCHAIN_SOLANA_RPC_URL: ${POWERCHAIN_SOLANA_RPC_URL:-https://api.devnet.solana.com}
+      POWERCHAIN_MINER_PROGRAM_ID: ${POWERCHAIN_MINER_PROGRAM_ID:-}
+      POWERCHAIN_MINER_MINT: ${POWERCHAIN_MINER_MINT:-}
+      POWERCHAIN_MINER_TREASURY_VAULT: ${POWERCHAIN_MINER_TREASURY_VAULT:-}
+      POWERCHAIN_WORKER_TOKEN: ${POWERCHAIN_WORKER_TOKEN:-powerchain-local-worker-token-000000000000000000}
+      POWERCHAIN_EVIDENCE_WORKER_TOKEN: ${POWERCHAIN_EVIDENCE_WORKER_TOKEN:-powerchain-local-evidence-token-00000000000000}
+      POWERCHAIN_COMPUTE_GATEWAY_TOKEN: ${POWERCHAIN_COMPUTE_GATEWAY_TOKEN:-powerchain-local-compute-token-000000000000000}
+      POWERCHAIN_RUN_MIGRATIONS: "true"
+      POWERCHAIN_RUN_SEED: "true"
+    ports:
+      - "127.0.0.1:3100:3100"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3100/api/v1/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  console:
+    <<: *workspace
+    working_dir: /workspace/apps/console
+    command: ["./node_modules/.bin/next", "start", "-p", "3000", "-H", "0.0.0.0"]
+    environment:
+      NODE_ENV: production
+      POWERCHAIN_MINER_API_URL: http://backend:3100
+      NEXT_PUBLIC_SOLANA_RPC_URL: ${NEXT_PUBLIC_SOLANA_RPC_URL:-https://api.devnet.solana.com}
+      POWERCHAIN_ENABLE_PREVIEW_API: "false"
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3000/login').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  frontend:
+    <<: *workspace
+    working_dir: /workspace/apps/frontend
+    command: ["./node_modules/.bin/next", "start", "-p", "3002", "-H", "0.0.0.0"]
+    environment:
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:3002:3002"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3002/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  compute:
+    <<: *workspace
+    profiles: ["compute"]
+    command: ["/workspace/docker/entrypoint-compute.sh"]
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3200
+      POWERCHAIN_BACKEND_URL: http://backend:3100
+      POWERCHAIN_COMPUTE_GATEWAY_TOKEN: ${POWERCHAIN_COMPUTE_GATEWAY_TOKEN:-powerchain-local-compute-token-000000000000000}
+      COMPUTE_UPSTREAM_BASE_URL: ${COMPUTE_UPSTREAM_BASE_URL:-https://api.openai.com/v1}
+      COMPUTE_UPSTREAM_API_KEY: ${COMPUTE_UPSTREAM_API_KEY:-}
+      COMPUTE_UPSTREAM_TIMEOUT_MS: 120000
+    ports:
+      - "127.0.0.1:3200:3200"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3200/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  mobile:
+    <<: *workspace
+    profiles: ["mobile"]
+    working_dir: /workspace/apps/mobile
+    command: ["./node_modules/.bin/expo", "start", "--lan", "--non-interactive"]
+    environment:
+      EXPO_PUBLIC_POWERCHAIN_API_URL: http://localhost:3100
+    ports:
+      - "8081:8081"
+    stdin_open: true
+    tty: true
+
+networks:
+  powerchain:
+    driver: bridge
 
 volumes:
-  miner_postgres:
+  powerchain_postgres:

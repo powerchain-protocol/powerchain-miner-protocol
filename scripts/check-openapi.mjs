@@ -16,6 +16,8 @@ for (const required of [
   "/source-rotations:",
   "/api/v1/reward-claims/{claimId}/prepare:",
   "/api/v1/audit/checkpoints:",
+  "/api/v1/core/capabilities:",
+  "/api/v1/core/characters:",
   "/api/v1/agents:",
   "/api/v1/agents/{agentId}/compute:",
   "/api/v1/compute/models:",

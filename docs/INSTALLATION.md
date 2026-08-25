@@ -7,7 +7,7 @@ Requirements:
 ```text
 Node.js >=24.19.0 <25
 Corepack
-pnpm 11.22.0
+pnpm 11.23.0
 PostgreSQL 17
 Docker Desktop/Engine (optional when using an external PostgreSQL server)
 ```
@@ -17,6 +17,18 @@ Recommended:
 ```bash
 corepack enable
 pnpm bootstrap
+```
+
+The default bootstrap does not require Docker. If PostgreSQL is unavailable and Docker is not installed/running, dependency/environment setup still completes and reports:
+
+```text
+WORKSPACE_READY / DATABASE_NOT_STARTED
+```
+
+Require a ready database in the same command with:
+
+```bash
+pnpm bootstrap:db
 ```
 
 The bootstrap creates local env files if they are missing and loads
@@ -47,7 +59,7 @@ Reviewed policy:
 
 ```yaml
 allowBuilds:
-  "esbuild@0.28.2": true
+  esbuild: true
   bigint-buffer: false
   bufferutil: false
   utf-8-validate: false

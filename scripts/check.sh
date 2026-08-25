@@ -16,24 +16,30 @@ node --test tests/node/*.test.mjs
 echo "[check] OpenAPI"
 node scripts/check-openapi.mjs
 
+echo "[check] docs"
+node scripts/check-docs.mjs
+
 echo "[check] skills"
 node scripts/check-skills.mjs
 
 echo "[check] pnpm build policy"
 node scripts/check-pnpm-build-policy.mjs
 
+echo "[check] Miner program contract"
+node scripts/check-miner-program.mjs
+
 if command -v cargo >/dev/null; then
   echo "[check] rust fmt"
-  cargo fmt --all -- --check
+  cargo fmt --manifest-path programs/miner/Cargo.toml --all -- --check
 fi
 
-if command -v pnpm >/dev/null && [[ -d node_modules ]]; then
+if command -v corepack >/dev/null 2>&1 && [[ -d node_modules ]]; then
   echo "[check] TypeScript"
-  pnpm typecheck
-  pnpm api:typecheck
-  pnpm typecheck:verifier
-  pnpm typecheck:evidence
-  pnpm typecheck:sdk
+  corepack pnpm typecheck
+  corepack pnpm api:typecheck
+  corepack pnpm typecheck:verifier
+  corepack pnpm typecheck:evidence
+  corepack pnpm typecheck:sdk
 fi
 
 echo "[check] OK"

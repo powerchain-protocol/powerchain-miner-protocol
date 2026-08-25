@@ -11,8 +11,8 @@ try {
   const migrations = await pool.query(
     `SELECT count(*)::int AS count FROM schema_migrations`,
   );
-  if (Number(migrations.rows[0]?.count ?? 0) < 9) {
-    throw new Error("DB smoke failed: expected at least seven migrations.");
+  if (Number(migrations.rows[0]?.count ?? 0) < 11) {
+    throw new Error("DB smoke failed: expected at least eleven migrations.");
   }
 
   await expectOne(
@@ -41,6 +41,24 @@ try {
       WHERE tgname='trg_compute_ledger_immutable'
         AND NOT tgisinternal`,
     "compute ledger immutable trigger",
+  );
+
+  await expectOne(
+    `SELECT 1 FROM pg_constraint
+      WHERE conname='proofs_settlement_lease_consistent'`,
+    "proof settlement lease consistency",
+  );
+
+  await expectOne(
+    `SELECT 1 FROM pg_constraint
+      WHERE conname='reward_claim_quorum_fields'`,
+    "reward claim approval quorum constraint",
+  );
+
+  await expectOne(
+    `SELECT 1 FROM pg_constraint
+      WHERE conname='compute_models_executable_route_complete'`,
+    "compute executable route constraint",
   );
 
   await expectOne(

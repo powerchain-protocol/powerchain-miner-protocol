@@ -1,0 +1,42 @@
+{
+  "name": "@powerchain-protocol/miner",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./constants": "./src/constants.ts",
+    "./types": "./src/types.ts",
+    "./math": "./src/math.ts",
+    "./proofs": "./src/proofs.ts",
+    "./claims": "./src/claims.ts",
+    "./pdas": "./src/pdas.ts",
+    "./api/v1": "./src/api/v1/index.ts",
+    "./cors": "./src/cors/index.ts",
+    "./core": "./src/core/index.ts",
+    "./nodes": "./src/nodes/index.ts",
+    "./depin": "./src/depin/index.ts",
+    "./solana": "./src/solana/index.ts",
+    "./helius": "./src/helius/index.ts",
+    "./iot": "./src/iot/index.ts",
+    "./iot/devices": "./src/iot/devices/index.ts",
+    "./iot/hardwares": "./src/iot/hardwares/index.ts",
+    "./iot/firmwares": "./src/iot/firmwares/index.ts",
+    "./compute": "./src/compute/index.ts",
+    "./ai": "./src/ai/index.ts",
+    "./ai/llm": "./src/ai/llm/index.ts",
+    "./ai/mpc": "./src/ai/mpc/index.ts",
+    "./agents": "./src/agents/index.ts",
+    "./skills": "./src/skills/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@solana/web3.js": "1.98.4"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "typescript": "5.9.3"
+  }
+}

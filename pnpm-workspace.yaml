@@ -1,6 +1,7 @@
 packages:
   - "apps/*"
   - "packages/*"
+  - "packages/*/*"
   - "services/*"
 
 # pnpm 11 dependency scripts are deny-by-default. Keep this review explicit
@@ -9,7 +10,7 @@ strictDepBuilds: true
 
 allowBuilds:
   # Required by tsx/Next/Expo tooling.
-  "esbuild@0.28.2": true
+  esbuild: true
 
   # Optional native acceleration paths. The JavaScript fallbacks are sufficient
   # for this monorepo, so do not execute their install/build scripts.

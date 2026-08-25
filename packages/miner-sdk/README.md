@@ -1,18 +1,19 @@
 # @powerchain/miner-sdk
 
-Canonical TypeScript SDK for the PowerChain Miner Anchor program.
+**Version:** `1.0.0`
+
+Administrative TypeScript SDK for the PowerChain Miner Anchor program.
+
+The SDK consumes and re-exports canonical protocol primitives from [`@powerchain-protocol/miner`](../powerchain-protocol/miner/README.md); it should not define competing PDA seeds or reward math.
 
 ## Capabilities
 
-- derive ProtocolConfig / treasury / MinerAccount / DeviceAccount / ClaimReceipt PDAs;
-- load the Anchor IDL and verify its address;
-- initialize protocol state;
-- register a reward-owner MinerAccount;
-- register a device against its Ed25519 signing public key;
-- inspect derived state.
-
-The SDK uses the Anchor 1.x TypeScript package `@anchor-lang/core` together with legacy
-`@solana/web3.js` v1 and Token-2022 helpers.
+- derive ProtocolConfig, treasury, MinerAccount, DeviceAccount and ClaimReceipt PDAs;
+- load/verify Anchor IDL and program address;
+- initialize protocol configuration;
+- register reward-owner MinerAccount;
+- register/reassign devices;
+- inspect program state.
 
 ## Commands
 
@@ -24,14 +25,8 @@ pnpm miner:reassign-device -- <env-file>
 pnpm miner:inspect -- <env-file>
 ```
 
-These file-keypair scripts are intended for Devnet/bootstrap administration. Mainnet owner
-registration should use an approved user-wallet or organizational signing flow.
+File-keypair administration is intended for controlled bootstrap/Devnet workflows. Mainnet owner and authority operations should use approved user or organizational signing flows.
 
+## Device reassignment
 
-## Device owner change
-
-Changing the off-chain reward owner invalidates chain binding. Use the explicit
-`reassign_device` instruction after the new owner has a MinerAccount.
-
-Both protocol authority and the new owner sign the reassignment. The backend subsequently
-decodes the DeviceAccount and MinerAccount data before marking chain binding VERIFIED.
+Changing the off-chain reward owner invalidates chain binding. Use the explicit `reassign_device` instruction after the new owner has a MinerAccount. Both protocol authority and the new owner sign the reassignment; the backend then independently decodes program accounts before marking binding verified.

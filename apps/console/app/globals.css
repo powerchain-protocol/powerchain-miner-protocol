@@ -1,24 +1,28 @@
+@import "tailwindcss";
 @import "@powerchain/design-system/css";
+@import "../styles/themes.css";
+@import "../styles/wallet-connect.css";
+@import "../styles/desktop.css";
 
 :root {
-  --bg: #f3f5f2;
-  --panel: #ffffff;
-  --ink: #101512;
-  --muted: #68716b;
-  --line: #dfe5df;
-  --green: #123f2b;
-  --green-2: #1c5c40;
-  --green-soft: #e9f2ec;
-  --lime: #b9dd55;
-  --shadow: 0 18px 55px rgba(25, 42, 31, .08);
+  --bg: var(--background);
+  --panel: var(--surface);
+  --ink: var(--foreground);
+  --muted: var(--muted-foreground);
+  --line: var(--border);
+  --green: #0b3d25;
+  --green-2: #10552f;
+  --green-soft: var(--positive-soft);
+  --lime: #8fbd58;
+  --shadow: var(--shadow-card);
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--ink);
+  background: var(--background);
+  color: var(--foreground);
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
 }

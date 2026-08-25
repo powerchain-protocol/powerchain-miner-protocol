@@ -1,24 +1,34 @@
 # @powerchain/frontend
 
-Public PowerChain Renewable Miner OS website and installable PWA.
+**Version:** `1.0.0`  
+**Framework:** Next.js 16 · React 19
+
+Public marketing website and installable PWA for PowerChain Renewable Miner OS and Agent Compute.
+
+## Responsibilities
+
+- product positioning and architecture explanation;
+- Proof-of-Energy and Agent Compute feature surfaces;
+- security/trust-boundary communication;
+- documentation and console entry points;
+- installable PWA shell.
+
+It is intentionally separate from the authenticated operator console and must not become a second control plane.
+
+## Development
 
 ```bash
 pnpm dev:frontend
 ```
 
-Default development port:
+Default URL:
 
 ```text
-3002
+http://localhost:3002
 ```
 
-Structure:
+## PWA rules
 
-```text
-app/
-components/
-  sections/
-public/
-```
+The public service worker does not cache `/api/*` responses. Navigation is network-first and only safe same-origin static assets are cached.
 
-The website is intentionally separate from the authenticated console.
+Design system: [`../../docs/DESIGN-GUIDE.md`](../../docs/DESIGN-GUIDE.md).

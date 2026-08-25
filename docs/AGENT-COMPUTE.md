@@ -1,6 +1,6 @@
 # PowerChain Agent Compute
 
-**Version:** 1.0.0  
+**Version:** 1.2.0  
 **Public base URL:** `https://compute.powerchain.energy/v1`
 
 Agent Compute lets a PowerChain AgentOS agent fund and consume hosted compute using the same
@@ -226,32 +226,6 @@ const response = await compute.chatCompletions({
 
 ---
 
-
-## 4.1 Model discovery
-
-Agents must discover models dynamically:
-
-```http
-GET /v1/models
-```
-
-Each entry includes:
-
-```text
-id
-name
-description
-contextLength
-```
-
-The endpoint only returns models whose routing and billing configuration is executable.
-
-Do not rely on an embedded client catalog. The bundled production metadata is retained for
-deployment bootstrap and documentation only.
-
-See `docs/AVAILABLE-MODELS.md`.
-
-
 ## 5. Usage authorization
 
 Before a provider request executes:
@@ -331,7 +305,7 @@ RELEASED
 
 ## 7. Streaming policy
 
-v1.0.0 intentionally rejects streaming requests.
+Canonical v1.0.0 intentionally rejects streaming requests.
 
 Reason:
 
@@ -453,7 +427,7 @@ The transaction signature is unique per top-up intent.
 
 The database and policy model reserve `sui` as a preferred funding chain.
 
-v1.0.0 does **not** implement Sui payment verification.
+Canonical v1.0.0 does **not** implement Sui payment verification.
 
 A Sui top-up confirmation fails explicitly rather than marking unverified wallet funding as
 credit.
@@ -514,7 +488,7 @@ Codex/OpenAI-style clients can use the localhost OpenAI-compatible proxy.
 The Claude Code adapter converts basic Anthropic text-message requests to Agent Compute Chat
 Completions.
 
-Advanced streaming/tool-block translation is intentionally not faked in v1.0.0.
+Advanced streaming/tool-block translation is intentionally not faked in canonical v1.0.0.
 
 ---
 
@@ -557,15 +531,3 @@ Recommended next telemetry:
 - top-up confirmation latency;
 - stuck authorization count;
 - per-model token/cost aggregates.
-
-
-## 17. Agent runtime setup
-
-Canonical local setup and routing guidance:
-
-- `docs/AVAILABLE-MODELS.md`
-- `docs/AGENT-SETUP.md`
-- `skills/acp-builder-setup/SKILL.md`
-- `utilities/model-routing/`
-
-Use live `/models` discovery before selecting a model.

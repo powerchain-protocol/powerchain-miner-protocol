@@ -13,27 +13,9 @@ paths:
         "200": {description: Healthy}
   /v1/models:
     get:
-      summary: List currently executable public compute models
-      description: Dynamic discovery endpoint. Agents should validate model ids here rather than hardcoding the bundled catalog.
+      summary: List enabled public compute models
       responses:
-        "200":
-          description: OpenAI-style model list with PowerChain discovery metadata
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [data]
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      required: [id, name, description, contextLength]
-                      properties:
-                        id: {type: string}
-                        name: {type: string}
-                        description: {type: string}
-                        contextLength: {type: integer, minimum: 1}
+        "200": {description: OpenAI-style model list}
   /v1/account:
     get:
       summary: Read the authenticated agent compute account

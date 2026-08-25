@@ -6,7 +6,7 @@ const source = await readFile(
 );
 
 const expected = new Map([
-  ["esbuild@0.28.2", "true"],
+  ["esbuild", "true"],
   ["bigint-buffer", "false"],
   ["bufferutil", "false"],
   ["utf-8-validate", "false"],

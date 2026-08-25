@@ -1,6 +1,6 @@
 # Signed Evidence Attestation & Quorum
 
-Version 0.8 gives automated evidence verifiers their own Ed25519 identities.
+Canonical v1.0.0 gives automated evidence verifiers their own Ed25519 identities and an explicit verifier class.
 
 ## Why this changed
 
@@ -27,6 +27,7 @@ evidence_verifiers
 ├── client
 ├── verifier_id
 ├── display name
+├── verifier_class
 ├── Ed25519 public key PEM
 └── ACTIVE / REVOKED
 ```
@@ -89,3 +90,29 @@ A human attestation stops counting toward a still-pending proof when the user:
 - no longer has the `VERIFIER` role.
 
 Already finalized proofs remain historical records.
+
+## Independence classes
+
+A policy may require independent evidence domains rather than only a raw attestation count. Supported classes are:
+
+```text
+RULE
+EMS
+REVENUE_METER
+UTILITY
+GRID_OPERATOR
+GATEWAY
+SIGNED_WEBHOOK
+MANUAL_REVIEW
+```
+
+Example:
+
+```text
+minAttestations = 3
+REVENUE_METER × 1
+EMS × 1
+RULE × 1
+```
+
+Three copies of the same rule worker cannot satisfy that policy. Human verifier approvals count as `MANUAL_REVIEW`.

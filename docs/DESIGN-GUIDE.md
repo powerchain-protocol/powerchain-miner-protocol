@@ -1,6 +1,6 @@
 # PowerChain Renewable Miner OS — UI/UX Design Guide
 
-**Version:** 1.0.0  
+**Version:** 1.1  
 **Theme:** Light-first  
 **Brand palette:** White · Light gray · Dark green · Black/charcoal
 
@@ -532,83 +532,3 @@ apps/mobile/
 ```
 
 Any new product surface should consume these tokens before adding local colors or spacing.
-
-
-## 19. Agent Compute
-
-Agent Compute screens use a distinct information order:
-
-```text
-Agent identity
-→ available / reserved credit
-→ endpoint
-→ API-key state
-→ funding policy
-→ recent usage
-→ top-up history
-```
-
-### Balance
-
-Always distinguish:
-
-```text
-Balance
-Reserved
-Available
-```
-
-Do not display a single balance while requests are in flight.
-
-### API keys
-
-The one-time secret must appear in a dedicated high-contrast panel immediately after
-creation.
-
-Required copy:
-
-```text
-ONE-TIME SECRET
-Copy this key now. PowerChain stores only its hash.
-```
-
-Never render the secret again from persisted state.
-
-### Auto-top up
-
-The policy form must show all autonomous bounds together:
-
-```text
-enabled
-preferred chain
-funding asset
-low-balance threshold
-top-up amount
-daily cap
-```
-
-Do not use a single unbounded "auto fund" toggle.
-
-### Endpoint
-
-Use monospaced text for:
-
-```text
-https://compute.powerchain.energy/v1
-```
-
-The endpoint is not a CTA; it is a copy/configuration surface.
-
-### Usage
-
-Usage rows should show:
-
-```text
-request ID
-public model
-state
-input / output tokens
-actual cost
-```
-
-An `AUTHORIZED` request is a reservation, not settled spend.

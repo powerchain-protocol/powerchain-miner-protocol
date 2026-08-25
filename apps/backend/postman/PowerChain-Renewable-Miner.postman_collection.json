@@ -106,6 +106,66 @@
         ],
         "url": "{{baseUrl}}/api/v1/audit/verify?clientId={{clientId}}"
       }
+    },
+    {
+      "name": "Protocol Core",
+      "item": [
+        {
+          "name": "Capabilities",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/core/capabilities"
+          }
+        },
+        {
+          "name": "Agent Characters",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/core/characters"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chain Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/health/chain"
+      }
+    },
+    {
+      "name": "Reward Claim Approval Policy",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/v1/clients/{{clientId}}/reward-claim-approval-policy"
+      }
+    },
+    {
+      "name": "Lease Proof Settlements",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{workerToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"workerId\": \"verifier-01\",\n  \"limit\": 25,\n  \"leaseSeconds\": 180\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/internal/proofs/lease"
+      }
     }
   ]
 }

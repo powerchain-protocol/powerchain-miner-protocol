@@ -52,7 +52,7 @@ test("production catalog contains the supplied 16 model ids and contexts", () =>
   }
 });
 
-test("v1.3 model discovery is a forward migration", async () => {
+test("canonical model discovery is a forward schema migration", async () => {
   const v12 = await readFile(
     "apps/backend/migrations/008_v120_agent_compute.sql",
     "utf8",

@@ -21,6 +21,7 @@ const packages = [
   "packages/api-client/package.json",
   "packages/design-system/package.json",
   "packages/miner-sdk/package.json",
+  "packages/powerchain-protocol/miner/package.json",
   "services/verifier-worker/package.json",
   "services/evidence-verifier/package.json",
 ];
@@ -42,6 +43,8 @@ grep -q '^version = "1.0.0"$' services/device-agent/pyproject.toml || {
   echo "device-agent version mismatch" >&2
   exit 1
 }
+
+node scripts/check-miner-program.mjs >/dev/null
 
 ./scripts/check.sh
 ./scripts/test.sh

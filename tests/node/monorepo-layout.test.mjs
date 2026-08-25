@@ -20,7 +20,7 @@ const required = [
   "docs/DESIGN-GUIDE.md",
 ];
 
-test("v1.1 canonical product monorepo is present", async () => {
+test("canonical v1.0.0 product monorepo is present", async () => {
   for (const path of required) {
     await access(path);
   }
@@ -39,8 +39,8 @@ test("Expo mobile is pinned to stable SDK 57 / React Native 0.86 line", async ()
   const mobile = JSON.parse(
     await readFile("apps/mobile/package.json", "utf8"),
   );
-  assert.match(mobile.dependencies.expo, /^~57\./);
-  assert.match(mobile.dependencies["react-native"], /^0\.86/);
+  assert.equal(mobile.dependencies.expo, "57.0.16");
+  assert.equal(mobile.dependencies["react-native"], "0.86.3");
 });
 
 test("marketing PWA does not cache API responses", async () => {

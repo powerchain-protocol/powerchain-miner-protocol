@@ -24,3 +24,16 @@ Additional Prometheus gauges:
 
 These distinguish evidence backlog from blockchain-binding backlog and node-local integrity
 failures.
+
+## Settlement and approval controls
+
+Canonical metrics include:
+
+```text
+powerchain_miner_settlement_active_leases
+powerchain_miner_settlement_intents{state=...}
+powerchain_miner_settlement_state_recoveries_total
+powerchain_miner_pending_claim_approvals
+```
+
+Use `GET /api/v1/health/chain` for cached on-chain deployment health. It is intentionally separate from the fast readiness probe.

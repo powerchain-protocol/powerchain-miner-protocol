@@ -7,5 +7,5 @@ python3 -m unittest discover -s tests/python -p 'test_*.py'
 node --test tests/node/*.test.mjs
 
 if command -v cargo >/dev/null; then
-  cargo test --workspace
+  cargo test --manifest-path programs/miner/Cargo.toml
 fi

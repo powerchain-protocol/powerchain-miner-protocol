@@ -1,4 +1,4 @@
--- PowerChain Agent Compute v1.3
+-- PowerChain Agent Compute — canonical schema migration 009
 -- Separates discoverable model metadata from executable billing/routing configuration.
 
 ALTER TABLE compute_models
@@ -11,7 +11,7 @@ UPDATE compute_models
    SET display_name = COALESCE(NULLIF(display_name,''), public_model)
  WHERE display_name IS NULL OR display_name='';
 
--- Existing v1.2 routes remain executable. New catalog-only records may be
+-- Existing Agent Compute routes remain executable. New catalog-only records may be
 -- discoverable before an operator supplies upstream routing and billing rates.
 ALTER TABLE compute_models
   ALTER COLUMN display_name SET NOT NULL;

@@ -6,12 +6,10 @@
 apps/
 ├── backend/    Fastify + PostgreSQL canonical `/api/v1`
 ├── console/    authenticated Next.js operations console
-├── compute/    OpenAI-compatible Agent Compute data plane
 ├── frontend/   public Next.js marketing website + PWA
 └── mobile/     Expo / React Native companion application
 
 packages/
-├── agent-compute/  compute metering + wallet-funding helpers
 ├── api-client/     runtime-neutral typed HTTP client
 ├── design-system/  shared visual tokens for web/native
 └── miner-sdk/      Solana/Anchor administration + PDA helpers
@@ -117,31 +115,3 @@ mobile ──────────────→ backend
 ```
 
 Apps do not import other apps.
-
-
-### `apps/compute`
-
-Public Agent Compute data plane.
-
-Owns:
-
-- `/v1/models`;
-- `/v1/account`;
-- `/v1/chat/completions`;
-- `/v1/responses`;
-- `/v1/topups/:intentId/confirm`;
-- upstream provider credentials;
-- request preauthorization/reconciliation calls to `apps/backend`.
-
-It does not directly mutate PostgreSQL.
-
-### `@powerchain/agent-compute`
-
-Shared compute primitives:
-
-- API key generation/hash;
-- conservative reservation math;
-- usage cost arithmetic;
-- request schemas;
-- Solana top-up transaction construction;
-- top-up reconciliation client.

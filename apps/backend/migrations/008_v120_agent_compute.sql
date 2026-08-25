@@ -1,4 +1,4 @@
--- PowerChain Agent Compute v1.2
+-- PowerChain Agent Compute — canonical schema migration 008
 -- Wallet-funded compute accounts, scoped API keys, usage authorization,
 -- append-only billing ledger and wallet top-up intents.
 

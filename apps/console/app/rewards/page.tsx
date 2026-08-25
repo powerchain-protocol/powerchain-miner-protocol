@@ -18,6 +18,7 @@ async function createEvidenceVerifier(formData: FormData) {
       clientId,
       verifierId: String(formData.get("verifierId") || ""),
       name: String(formData.get("name") || ""),
+      verifierClass: String(formData.get("verifierClass") || "RULE"),
       publicKeyPem: String(formData.get("publicKeyPem") || ""),
     }),
   });
@@ -45,6 +46,15 @@ async function createVerificationPolicy(formData: FormData) {
       verifierRegistryIds: formData
         .getAll("verifierRegistryIds")
         .map((value) => String(value)),
+      classRequirements: [
+        ["REVENUE_METER", Number(formData.get("revenueMeterMin") || 0)],
+        ["EMS", Number(formData.get("emsMin") || 0)],
+        ["RULE", Number(formData.get("ruleMin") || 0)],
+        ["GATEWAY", Number(formData.get("gatewayMin") || 0)],
+        ["MANUAL_REVIEW", Number(formData.get("manualReviewMin") || 0)],
+      ]
+        .filter(([, count]) => Number(count) > 0)
+        .map(([verifierClass, minCount]) => ({ verifierClass, minCount })),
     }),
   });
   revalidatePath(`/rewards?client=${clientId}`);
@@ -125,6 +135,36 @@ async function approveClaim(formData: FormData) {
   revalidatePath(`/rewards?client=${clientId}`);
 }
 
+async function updateClaimApprovalPolicy(formData: FormData) {
+  "use server";
+  const clientId = String(formData.get("clientId"));
+  const highValueMiner = String(formData.get("highValueMiner") || "").trim();
+  const normalRequiredRoles = [
+    formData.get("normalFinance") === "on" ? "FINANCE" : null,
+    formData.get("normalClientAdmin") === "on" ? "CLIENT_ADMIN" : null,
+  ].filter(Boolean);
+  const highValueRequiredRoles = [
+    formData.get("highFinance") === "on" ? "FINANCE" : null,
+    formData.get("highClientAdmin") === "on" ? "CLIENT_ADMIN" : null,
+  ].filter(Boolean);
+
+  await consoleApi(`/api/v1/clients/${clientId}/reward-claim-approval-policy`, {
+    method: "PUT",
+    body: JSON.stringify({
+      highValueThresholdBaseUnits: highValueMiner
+        ? decimalToBaseUnits(highValueMiner)
+        : null,
+      normalRequiredRoles:
+        normalRequiredRoles.length ? normalRequiredRoles : ["FINANCE"],
+      highValueRequiredRoles:
+        highValueRequiredRoles.length
+          ? highValueRequiredRoles
+          : ["FINANCE", "CLIENT_ADMIN"],
+    }),
+  });
+  revalidatePath(`/rewards?client=${clientId}`);
+}
+
 type RewardSummary = {
   ledger: { net_base_units: string; accrued_base_units: string };
   claims: { total: number; requested: number; confirmed: number; settled_base_units: string };
@@ -158,6 +198,7 @@ export default async function RewardsPage({
   let claims: any[] = [];
   let verificationPolicies: any[] = [];
   let evidenceVerifiers: any[] = [];
+  let approvalPolicy: any | null = null;
   let actorId: string | null = null;
 
   try {
@@ -169,13 +210,14 @@ export default async function RewardsPage({
   }
 
   if (selected) {
-    [summary, policies, epochs, claims, verificationPolicies, evidenceVerifiers] = await Promise.all([
+    [summary, policies, epochs, claims, verificationPolicies, evidenceVerifiers, approvalPolicy] = await Promise.all([
       consoleApi<RewardSummary>(`/api/v1/rewards/summary?clientId=${selected.id}`),
       consoleApi<{ policies: any[] }>(`/api/v1/reward-policies?clientId=${selected.id}`).then((r) => r.policies),
       consoleApi<{ epochs: any[] }>(`/api/v1/reward-epochs?clientId=${selected.id}`).then((r) => r.epochs),
       consoleApi<{ claims: any[] }>(`/api/v1/reward-claims?clientId=${selected.id}`).then((r) => r.claims).catch(() => []),
       consoleApi<{ policies: any[] }>(`/api/v1/verification-policies?clientId=${selected.id}`).then((r) => r.policies),
       consoleApi<{ verifiers: any[] }>(`/api/v1/evidence-verifiers?clientId=${selected.id}`).then((r) => r.verifiers),
+      consoleApi<{ policy: any }>(`/api/v1/clients/${selected.id}/reward-claim-approval-policy`).then((r) => r.policy).catch(() => null),
     ]);
   }
 
@@ -237,6 +279,18 @@ export default async function RewardsPage({
                 <input type="hidden" name="clientId" value={selected.id} />
                 <label>Name<input name="name" required placeholder="Revenue meter verifier" /></label>
                 <label>Verifier ID<input name="verifierId" required placeholder="meter-rules-01" /></label>
+                <label>
+                  Class
+                  <select name="verifierClass" defaultValue="RULE">
+                    <option value="REVENUE_METER">Revenue meter</option>
+                    <option value="EMS">EMS</option>
+                    <option value="RULE">Rule engine</option>
+                    <option value="UTILITY">Utility</option>
+                    <option value="GRID_OPERATOR">Grid operator</option>
+                    <option value="GATEWAY">Gateway</option>
+                    <option value="SIGNED_WEBHOOK">Signed webhook</option>
+                  </select>
+                </label>
                 <label className="verifier-public-key">
                   Ed25519 public key PEM
                   <textarea name="publicKeyPem" required rows={5} placeholder="-----BEGIN PUBLIC KEY-----" />
@@ -249,7 +303,7 @@ export default async function RewardsPage({
                   <div key={verifier.id}>
                     <span>
                       <strong>{verifier.name}</strong>
-                      <small>{verifier.verifier_id}</small>
+                      <small>{verifier.verifier_id} · {verifier.verifier_class}</small>
                     </span>
                     <span>
                       <b>{verifier.status}</b>
@@ -286,11 +340,16 @@ export default async function RewardsPage({
                       .filter((verifier) => verifier.status === "ACTIVE")
                       .map((verifier) => (
                         <option key={verifier.id} value={verifier.id}>
-                          {verifier.name} · {verifier.verifier_id}
+                          {verifier.name} · {verifier.verifier_class}
                         </option>
                       ))}
                   </select>
                 </label>
+                <label>Revenue meter min<input name="revenueMeterMin" type="number" min="0" max="10" defaultValue="0" /></label>
+                <label>EMS min<input name="emsMin" type="number" min="0" max="10" defaultValue="0" /></label>
+                <label>Rule min<input name="ruleMin" type="number" min="0" max="10" defaultValue="0" /></label>
+                <label>Gateway min<input name="gatewayMin" type="number" min="0" max="10" defaultValue="0" /></label>
+                <label>Manual review min<input name="manualReviewMin" type="number" min="0" max="10" defaultValue="0" /></label>
                 <button className="primary-btn">Create verification policy</button>
               </form>
 
@@ -298,7 +357,15 @@ export default async function RewardsPage({
                 {verificationPolicies.map((policy) => (
                   <div key={policy.id}>
                     <span><strong>{policy.name}</strong><small>{policy.renewable_type}</small></span>
-                    <span><b>{policy.min_attestations} attestation(s)</b><small>min {policy.min_quality_bps} bps</small></span>
+                    <span>
+                      <b>{policy.min_attestations} attestation(s)</b>
+                      <small>
+                        min {policy.min_quality_bps} bps
+                        {policy.class_requirements?.length
+                          ? ` · ${policy.class_requirements.map((item: any) => `${item.verifierClass}×${item.minCount}`).join(" + ")}`
+                          : ""}
+                      </small>
+                    </span>
                   </div>
                 ))}
                 {!verificationPolicies.length && <p className="empty">No evidence policy configured.</p>}
@@ -392,6 +459,48 @@ export default async function RewardsPage({
             </section>
           )}
 
+          {(selected.role === undefined || selected.role === "CLIENT_ADMIN") && approvalPolicy && (
+            <section className="console-panel">
+              <div className="console-panel-head">
+                <div>
+                  <span className="section-label">CLAIM APPROVAL POLICY</span>
+                  <h2>Segregation of duties</h2>
+                </div>
+              </div>
+              <form action={updateClaimApprovalPolicy} className="reward-form">
+                <input type="hidden" name="clientId" value={selected.id} />
+                <label>
+                  High-value threshold (MINER)
+                  <input
+                    name="highValueMiner"
+                    inputMode="decimal"
+                    placeholder="optional"
+                    defaultValue={approvalPolicy.high_value_threshold_base_units
+                      ? String(Number(approvalPolicy.high_value_threshold_base_units) / 1_000_000_000)
+                      : ""}
+                  />
+                </label>
+                <label className="checkbox-label">
+                  <input name="normalFinance" type="checkbox" defaultChecked={approvalPolicy.normal_required_roles?.includes("FINANCE") ?? true} />
+                  Normal: Finance
+                </label>
+                <label className="checkbox-label">
+                  <input name="normalClientAdmin" type="checkbox" defaultChecked={approvalPolicy.normal_required_roles?.includes("CLIENT_ADMIN") ?? false} />
+                  Normal: Client Admin
+                </label>
+                <label className="checkbox-label">
+                  <input name="highFinance" type="checkbox" defaultChecked={approvalPolicy.high_value_required_roles?.includes("FINANCE") ?? true} />
+                  High value: Finance
+                </label>
+                <label className="checkbox-label">
+                  <input name="highClientAdmin" type="checkbox" defaultChecked={approvalPolicy.high_value_required_roles?.includes("CLIENT_ADMIN") ?? true} />
+                  High value: Client Admin
+                </label>
+                <button className="primary-btn">Save approval policy</button>
+              </form>
+            </section>
+          )}
+
           <section className="console-panel">
             <div className="console-panel-head"><div><span className="section-label">CLAIMS</span><h2>Reward claims</h2></div><span className="count-pill">{claims.length}</span></div>
             <div className="client-table claims">
@@ -401,7 +510,15 @@ export default async function RewardsPage({
                 <span>{asMiner(claim.amount_base_units)} MINER</span>
                 <span>
                   <b className={`status-chip ${claim.status.toLowerCase()}`}>{claim.status}</b>
-                  {claim.status === "REQUESTED" && (selected.role === undefined || selected.role === "FINANCE") && (
+                  {claim.status === "REQUESTED" && (
+                    <small className="claim-signature">
+                      approvals {claim.approval_count ?? 0}/{claim.required_approvals ?? 1}
+                      {claim.required_approval_roles?.length
+                        ? ` · ${claim.required_approval_roles.join(" + ")}`
+                        : ""}
+                    </small>
+                  )}
+                  {claim.status === "REQUESTED" && (selected.role === "FINANCE" || selected.role === "CLIENT_ADMIN") && (
                     <form action={approveClaim} className="inline-action">
                       <input type="hidden" name="clientId" value={selected.id} />
                       <input type="hidden" name="claimId" value={claim.id} />

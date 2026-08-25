@@ -13,12 +13,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "zod": "^4.0.0",
-    "@solana/web3.js": "^1.98.4",
-    "@solana/spl-token": "^0.4.15"
+    "zod": "4.4.3",
+    "@solana/web3.js": "1.98.4",
+    "@solana/spl-token": "0.4.15"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
-    "typescript": "^5.9.3"
+    "@types/node": "24.13.3",
+    "typescript": "5.9.3"
   }
 }

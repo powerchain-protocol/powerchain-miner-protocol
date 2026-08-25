@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Icons } from "@/components/icons";
+import { PairNodeModal, ProofDetailsModal } from "@/components/modals";
+import { appEvents } from "@/events";
 import type { Device, Proof } from "@/lib/types";
 
 type DashboardData = {
@@ -59,7 +61,6 @@ export function Dashboard() {
   const [data, setData] = useState<DashboardData>(demo);
   const [pairOpen, setPairOpen] = useState(false);
   const [selectedProof, setSelectedProof] = useState<Proof | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const refresh = useCallback(async () => {
     try {
@@ -80,6 +81,16 @@ export function Dashboard() {
 
   const controlPlane = typeof window === "undefined" ? "http://localhost:3000" : window.location.origin;
   const installCommand = `sudo POWERCHAIN_SOURCE_ROOT="$PWD" ./os/install.sh`;
+
+  function openPairNode(source: string) {
+    appEvents.emit("node:pair-requested", { source });
+    setPairOpen(true);
+  }
+
+  function selectProof(proof: Proof) {
+    appEvents.emit("proof:selected", { proofId: proof.id });
+    setSelectedProof(proof);
+  }
 
   const nav = [
     ["Overview", Icons.Overview, "overview"],
@@ -125,7 +136,7 @@ export function Dashboard() {
           <div className="top-actions">
             {data.simulated && <span className="demo-badge">SIMULATED PREVIEW</span>}
             <span className="network-pill"><i /> SOLANA · {data.network.toUpperCase()}</span>
-            <button className="primary-btn" onClick={() => setPairOpen(true)}><Icons.Plus /> Pair node</button>
+            <button className="primary-btn" onClick={() => openPairNode("dashboard-header")}><Icons.Plus /> Pair node</button>
           </div>
         </header>
 
@@ -136,7 +147,7 @@ export function Dashboard() {
               <h2>Turn measured clean energy into verifiable network work.</h2>
               <p>Raspberry Pi nodes sign meter evidence locally. The control plane validates proof continuity, aggregates renewable output and prepares MINER rewards for Solana settlement.</p>
               <div className="hero-actions">
-                <button className="primary-btn" onClick={() => setPairOpen(true)}><Icons.Plus /> Connect Raspberry Pi</button>
+                <button className="primary-btn" onClick={() => openPairNode("dashboard-hero")}><Icons.Plus /> Connect Raspberry Pi</button>
                 <button className="secondary-btn" onClick={() => document.getElementById("proofs")?.scrollIntoView({ behavior: "smooth" })}>Inspect proofs</button>
               </div>
             </div>
@@ -166,7 +177,7 @@ export function Dashboard() {
             <article className="panel" id="nodes">
               <div className="panel-head">
                 <div><span className="section-label">NODE FLEET</span><h3>Renewable nodes</h3></div>
-                <button className="text-btn" onClick={() => setPairOpen(true)}>Add node +</button>
+                <button className="text-btn" onClick={() => openPairNode("node-fleet")}>Add node +</button>
               </div>
               <div className="device-list">
                 {data.devices.map((device) => (
@@ -212,7 +223,7 @@ export function Dashboard() {
                 <thead><tr><th>Node</th><th>Sequence</th><th>Energy</th><th>Avg power</th><th>Digest</th><th>Reward</th><th>Status</th></tr></thead>
                 <tbody>
                   {data.proofs.map((proof) => (
-                    <tr key={proof.id} onClick={() => setSelectedProof(proof)}>
+                    <tr key={proof.id} onClick={() => selectProof(proof)}>
                       <td>{proof.deviceId}</td>
                       <td>#{proof.sequence}</td>
                       <td>{proof.energyDeltaWh} Wh</td>
@@ -229,43 +240,18 @@ export function Dashboard() {
         </div>
       </section>
 
-      {pairOpen && (
-        <div className="modal-backdrop" onMouseDown={() => setPairOpen(false)}>
-          <div className="modal" onMouseDown={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={() => setPairOpen(false)} aria-label="Close"><Icons.Close /></button>
-            <span className="modal-icon"><Icons.Node /></span>
-            <span className="section-label">PAIR HARDWARE</span>
-            <h3>Connect a Raspberry Pi node</h3>
-            <p>Flash Raspberry Pi OS Lite 64-bit, extract this repository on the Pi, then run the reviewable local installer below. Set the bootstrap token in <code>/etc/powerchain-miner/config.toml</code> before first enrollment.</p>
-            <div className="codebox"><code>{installCommand}</code><button onClick={async () => { await navigator.clipboard.writeText(installCommand); setCopied(true); setTimeout(() => setCopied(false), 1500); }}><Icons.Copy />{copied ? "Copied" : "Copy"}</button></div>
-            <div className="pair-steps">
-              <div><b>01</b><span><strong>Flash or install</strong><small>Raspberry Pi OS Lite 64-bit</small></span></div>
-              <div><b>02</b><span><strong>Configure meter</strong><small>Modbus TCP or HTTP JSON source</small></span></div>
-              <div><b>03</b><span><strong>Enroll</strong><small>Device creates its Ed25519 identity locally</small></span></div>
-            </div>
-            <button className="primary-btn wide" onClick={() => setPairOpen(false)}>Done</button>
-          </div>
-        </div>
-      )}
+      <PairNodeModal
+        open={pairOpen}
+        onOpenChange={setPairOpen}
+        installCommand={installCommand}
+      />
 
-      {selectedProof && (
-        <div className="modal-backdrop" onMouseDown={() => setSelectedProof(null)}>
-          <div className="modal proof-modal" onMouseDown={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={() => setSelectedProof(null)} aria-label="Close"><Icons.Close /></button>
-            <span className="modal-icon success"><Icons.Proof /></span>
-            <span className="section-label">VERIFIED PROOF</span>
-            <h3>{selectedProof.deviceId} · #{selectedProof.sequence}</h3>
-            <div className="detail-grid">
-              <span>Energy<strong>{selectedProof.energyDeltaWh} Wh</strong></span>
-              <span>Average power<strong>{selectedProof.averagePowerW} W</strong></span>
-              <span>Samples<strong>{selectedProof.sampleCount}</strong></span>
-              <span>Reward<strong>{formatToken(selectedProof.rewardBaseUnits)} MINER</strong></span>
-            </div>
-            <label>SHA-256 digest</label><div className="digest">{selectedProof.proofDigest}</div>
-            <label>Observed</label><div className="digest">{selectedProof.observedAt}</div>
-          </div>
-        </div>
-      )}
+      <ProofDetailsModal
+        proof={selectedProof}
+        onOpenChange={(open) => {
+          if (!open) setSelectedProof(null);
+        }}
+      />
     </main>
   );
 }

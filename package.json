@@ -2,7 +2,7 @@
   "name": "powerchain-renewable-miner",
   "private": true,
   "version": "1.0.0",
-  "packageManager": "pnpm@11.22.0",
+  "packageManager": "pnpm@11.23.0",
   "engines": {
     "node": ">=24.19.0 <25"
   },
@@ -10,7 +10,7 @@
     "dev": "pnpm dev:console",
     "build": "pnpm build:web",
     "start": "pnpm --filter @powerchain/console start",
-    "typecheck": "pnpm typecheck:console && pnpm typecheck:frontend && pnpm typecheck:mobile && pnpm typecheck:design && pnpm typecheck:api-client && pnpm typecheck:compute && pnpm typecheck:agent-compute",
+    "typecheck": "pnpm typecheck:console && pnpm typecheck:frontend && pnpm typecheck:mobile && pnpm typecheck:design && pnpm typecheck:api-client && pnpm typecheck:compute && pnpm typecheck:agent-compute && pnpm typecheck:protocol-miner",
     "dev:verifier": "pnpm --filter @powerchain/miner-verifier-worker dev",
     "typecheck:verifier": "pnpm --filter @powerchain/miner-verifier-worker typecheck",
     "dev:api": "pnpm --filter @powerchain/backend dev",
@@ -67,6 +67,27 @@
     "deps:build-policy": "node scripts/check-pnpm-build-policy.mjs",
     "deps:review": "pnpm ignored-builds",
     "peers:check": "pnpm peers check",
-    "dev:apps": "pnpm -r --parallel --filter @powerchain/backend --filter @powerchain/console --filter @powerchain/compute --filter @powerchain/frontend run dev"
+    "dev:apps": "pnpm -r --parallel --filter @powerchain/backend --filter @powerchain/console --filter @powerchain/compute --filter @powerchain/frontend run dev",
+    "typecheck:protocol-miner": "pnpm --filter @powerchain-protocol/miner typecheck",
+    "docker:build": "./scripts/docker-compose.sh build",
+    "docker:up": "./scripts/docker-compose.sh up -d",
+    "docker:down": "./scripts/docker-compose.sh down",
+    "docker:logs": "./scripts/docker-compose.sh logs -f",
+    "docker:ps": "./scripts/docker-compose.sh ps",
+    "docker:compute": "./scripts/docker-compose.sh --profile compute up -d compute",
+    "docker:mobile": "./scripts/docker-compose.sh --profile mobile up mobile",
+    "docker:config": "./scripts/docker-compose.sh config",
+    "docs:check": "node scripts/check-docs.mjs",
+    "bootstrap:db": "./scripts/bootstrap-dev.sh --require-db",
+    "bootstrap:no-db": "./scripts/bootstrap-dev.sh --skip-db",
+    "program:check": "node scripts/check-miner-program.mjs",
+    "program:doctor": "./scripts/program-doctor.sh",
+    "program:fmt": "cargo fmt --manifest-path programs/miner/Cargo.toml --all -- --check",
+    "program:test": "cargo test --manifest-path programs/miner/Cargo.toml",
+    "program:build": "anchor build",
+    "program:sync-id": "./scripts/sync-program-id.sh",
+    "program:deploy": "./scripts/deploy-miner.sh",
+    "program:anchor-test": "anchor test",
+    "console:ui:add": "pnpm --filter @powerchain/console exec shadcn add"
   }
 }

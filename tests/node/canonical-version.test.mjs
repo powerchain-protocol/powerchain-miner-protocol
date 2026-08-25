@@ -9,12 +9,23 @@ import { join } from "node:path";
 const expected = "1.0.0";
 
 async function packageFiles(root) {
-  const entries = await readdir(root, {
-    withFileTypes: true,
-  });
-  return entries
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => join(root, entry.name, "package.json"));
+  const files = [];
+
+  async function walk(directory) {
+    const entries = await readdir(directory, {
+      withFileTypes: true,
+    });
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const child = join(directory, entry.name);
+      files.push(join(child, "package.json"));
+      await walk(child);
+    }
+  }
+
+  await walk(root);
+  return files;
 }
 
 test("all public workspace package versions are canonical 1.0.0", async () => {
@@ -54,6 +65,6 @@ test("public API contracts use canonical 1.0.0", async () => {
 
 test("README declares canonical v1.0.0", async () => {
   const source = await readFile("README.md", "utf8");
-  assert.match(source, /\*\*Version:\*\*\s*1\.0\.0/);
+  assert.match(source, /\*\*(?:Canonical version|Version):\*\*\s*`?1\.0\.0`?/);
   assert.match(source, /only supported product version/i);
 });

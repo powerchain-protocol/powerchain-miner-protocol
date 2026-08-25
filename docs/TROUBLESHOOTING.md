@@ -1,5 +1,23 @@
 # Troubleshooting
 
+## Bootstrap ends with `DATABASE_NOT_STARTED`
+
+This is a successful partial development bootstrap, not an installation failure. Dependencies and local environment files are ready, but PostgreSQL was not started.
+
+Continue with frontend/mobile/tooling work, or start/configure a database and run:
+
+```bash
+pnpm db:up
+pnpm db:migrate
+pnpm db:seed
+```
+
+For strict all-in-one setup use:
+
+```bash
+pnpm bootstrap:db
+```
+
 ## `ERR_PNPM_IGNORED_BUILDS`
 
 The workspace uses strict dependency build review. The committed policy intentionally allows

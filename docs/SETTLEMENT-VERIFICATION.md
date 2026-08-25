@@ -28,3 +28,9 @@ destination token account, reward owner and exact base-unit amount.
 
 `reward_claims.chain_signature` remains unique, so one Solana transaction cannot confirm two
 claims.
+
+## Proof settlement worker safety
+
+Verified Proof-of-Energy settlement uses PostgreSQL leases plus durable signed transaction intents. Multiple verifier-worker instances cannot settle the same proof concurrently.
+
+See [Proof Settlement Leases & Durable Intents](SETTLEMENT-LEASES.md).

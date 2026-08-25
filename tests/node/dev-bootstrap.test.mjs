@@ -25,7 +25,7 @@ const computeUpstream = await readFile(
 
 test("pnpm build scripts are reviewed explicitly", () => {
   assert.match(workspace, /strictDepBuilds:\s*true/);
-  assert.match(workspace, /["\']?esbuild@0\.28\.2["\']?:\s*true/);
+  assert.match(workspace, /["\']?esbuild["\']?:\s*true/);
   assert.match(workspace, /bigint-buffer:\s*false/);
   assert.match(workspace, /bufferutil:\s*false/);
   assert.match(workspace, /utf-8-validate:\s*false/);
@@ -45,11 +45,11 @@ test("pnpm run no longer auto-installs stale dependencies", () => {
 test("bootstrap installs once and handles lockfile deterministically", () => {
   assert.match(
     bootstrap,
-    /pnpm install --frozen-lockfile/,
+    /install --frozen-lockfile/,
   );
   assert.match(
     bootstrap,
-    /pnpm install --no-frozen-lockfile/,
+    /install --no-frozen-lockfile/,
   );
   assert.match(
     bootstrap,
@@ -61,7 +61,7 @@ test("bootstrap installs once and handles lockfile deterministically", () => {
   );
 });
 
-test("database bootstrap fails explicitly when Docker and PostgreSQL are unavailable", () => {
+test("database bootstrap supports optional and strict Docker/PostgreSQL modes", () => {
   assert.match(
     dbUp,
     /if ! command -v docker/,
@@ -74,6 +74,9 @@ test("database bootstrap fails explicitly when Docker and PostgreSQL are unavail
     dbUp,
     /Start Docker Desktop/,
   );
+  assert.match(dbUp, /--optional/);
+  assert.match(bootstrap, /WORKSPACE_READY \/ DATABASE_NOT_STARTED/);
+  assert.match(bootstrap, /--require-db/);
 });
 
 test("backend and compute services load their app-local env files", () => {

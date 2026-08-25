@@ -20,6 +20,13 @@ paths:
       responses:
         "200": {description: Ready}
         "503": {description: Not ready}
+  /api/v1/health/chain:
+    get:
+      summary: Cached on-chain deployment health
+      description: Verifies program deployment, v1 ProtocolConfig, Token-2022 treasury PDA/mint/authority, and RPC freshness.
+      responses:
+        "200": {description: Chain deployment healthy}
+        "503": {description: Chain deployment mismatch or unavailable}
   /api/v1/auth/login:
     post:
       summary: Authenticate console user
@@ -101,6 +108,27 @@ paths:
       responses:
         "201": {description: Claim requested}
         "409": {description: Insufficient balance, wallet mismatch, or idempotency conflict}
+  /api/v1/clients/{clientId}/reward-claim-approval-policy:
+    get:
+      summary: Read the client reward-claim approval policy
+      security: [{bearerAuth: []}]
+      responses: {"200": {description: Approval policy or canonical default}}
+    put:
+      summary: Replace the active claim approval policy
+      description: Snapshots role-distinct approval requirements onto newly requested claims.
+      security: [{bearerAuth: []}]
+      responses:
+        "200": {description: Approval policy updated}
+        "403": {description: Client Admin role required}
+  /api/v1/reward-claims/{claimId}/approve:
+    post:
+      summary: Add one role-distinct claim approval
+      description: Requesters cannot self-approve. High-value policies can require both FINANCE and CLIENT_ADMIN approvals. SuperAdmin is not a substitute for a client-scoped approver.
+      security: [{bearerAuth: []}]
+      responses:
+        "200": {description: Approval recorded; claim may remain REQUESTED until quorum}
+        "403": {description: Required client-scoped approver role missing}
+        "409": {description: Self approval, duplicate role, or invalid state}
   /api/v1/reward-claims/{claimId}/prepare:
     post:
       summary: Prepare the wallet-authorized Anchor claim instruction
@@ -194,6 +222,36 @@ paths:
       summary: List configured public compute models
       security: [{bearerAuth: []}]
       responses: {"200": {description: Compute models}}
+  /api/v1/core/capabilities:
+    get:
+      summary: Read canonical Miner protocol capabilities
+      responses:
+        "200": {description: Canonical v1.0.0 protocol capability map}
+  /api/v1/core/characters:
+    get:
+      summary: Read canonical AgentOS character boundaries
+      responses:
+        "200": {description: Canonical bounded agent characters}
+
+  /api/v1/internal/proofs/lease:
+    post:
+      summary: Lease verified proofs to one settlement worker
+      description: Trusted worker route using PostgreSQL FOR UPDATE SKIP LOCKED to prevent concurrent Solana settlement.
+      responses:
+        "200": {description: Leased proof batch}
+  /api/v1/internal/proofs/{proofId}/settlement-intent:
+    post:
+      summary: Persist the signed Solana settlement intent before broadcast
+      responses:
+        "200": {description: Durable settlement intent prepared}
+        "409": {description: Lease lost or conflicting submitted transaction}
+  /api/v1/internal/proofs/{proofId}/reconcile:
+    post:
+      summary: Reconcile a leased proof settlement
+      responses:
+        "200": {description: Settlement state reconciled}
+        "409": {description: Lease lost}
+
 components:
   securitySchemes:
     bearerAuth:
