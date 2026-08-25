@@ -19,6 +19,9 @@ node scripts/check-openapi.mjs
 echo "[check] skills"
 node scripts/check-skills.mjs
 
+echo "[check] pnpm build policy"
+node scripts/check-pnpm-build-policy.mjs
+
 if command -v cargo >/dev/null; then
   echo "[check] rust fmt"
   cargo fmt --all -- --check

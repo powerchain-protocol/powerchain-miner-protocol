@@ -1,30 +1,108 @@
 # Installation Instructions
 
-## 1. Backend development environment
+## 1. Product monorepo development environment
 
-```bash
-cp apps/backend/.env.example apps/backend/.env
-cp apps/console/.env.example apps/console/.env.local
+Requirements:
 
-docker compose up -d postgres
-corepack enable
-corepack use pnpm@11.22.0
-pnpm install
-pnpm db:migrate
-pnpm db:seed
+```text
+Node.js >=24.19.0 <25
+Corepack
+pnpm 11.22.0
+PostgreSQL 17
+Docker Desktop/Engine (optional when using an external PostgreSQL server)
 ```
 
-Start the complete control plane:
+Recommended:
 
 ```bash
-pnpm dev:api
-pnpm dev
+corepack enable
+pnpm bootstrap
+```
+
+The bootstrap creates local env files if they are missing and loads
+`apps/backend/.env` automatically for backend/database commands.
+
+### Docker Desktop not installed
+
+`docker compose up` cannot work without the Docker CLI/daemon. If `pnpm doctor` reports that
+Docker is unavailable, either install and start Docker Desktop or point the backend at an
+existing PostgreSQL 17 instance:
+
+```env
+# apps/backend/.env
+DATABASE_URL=postgres://user:password@host:5432/database
+```
+
+Then:
+
+```bash
+pnpm bootstrap
+```
+
+### Dependency lifecycle scripts
+
+The repository uses pnpm 11 strict dependency-build review.
+
+Reviewed policy:
+
+```yaml
+allowBuilds:
+  "esbuild@0.28.2": true
+  bigint-buffer: false
+  bufferutil: false
+  utf-8-validate: false
+```
+
+Do not approve every transitive build script globally just to make installation pass.
+
+Inspect current policy:
+
+```bash
+pnpm deps:build-policy
+```
+
+Inspect any newly discovered dependency build scripts:
+
+```bash
+pnpm deps:review
+```
+
+A new unreviewed lifecycle script should fail installation until it is deliberately reviewed.
+
+### Lockfile
+
+If `pnpm-lock.yaml` is absent, bootstrap generates it once with a non-frozen install. Commit
+the resulting lockfile. Subsequent bootstrap runs use:
+
+```bash
+pnpm install --frozen-lockfile
+```
+
+### Start services
+
+All primary web/API services:
+
+```bash
+pnpm dev:apps
+```
+
+Mobile remains a separate Expo process:
+
+```bash
+pnpm dev:mobile
+```
+
+Or run components separately:
+
+```bash
+pnpm dev:backend
+pnpm dev:console
+pnpm dev:compute
+pnpm dev:frontend
 pnpm dev:evidence
 pnpm dev:verifier
 ```
 
-For local UI/API work where blockchain settlement is not needed, the last worker may remain
-stopped. Proofs will stay `VERIFIED`/pending-chain rather than being submitted to Solana.
 
 ## 2. Raspberry Pi / Linux node
 

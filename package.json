@@ -1,7 +1,7 @@
 {
   "name": "powerchain-renewable-miner",
   "private": true,
-  "version": "1.3.0",
+  "version": "1.3.1",
   "packageManager": "pnpm@11.22.0",
   "engines": {
     "node": ">=24.19.0 <25"
@@ -59,6 +59,14 @@
     "codex:on": "node scripts/configure-codex-powerchain-apc.mjs on",
     "codex:off": "node scripts/configure-codex-powerchain-apc.mjs off",
     "claude:on": "node scripts/configure-claude-powerchain-apc.mjs on",
-    "claude:off": "node scripts/configure-claude-powerchain-apc.mjs off"
+    "claude:off": "node scripts/configure-claude-powerchain-apc.mjs off",
+    "bootstrap": "./scripts/bootstrap-dev.sh",
+    "doctor": "./scripts/doctor.sh",
+    "db:up": "./scripts/db-up.sh",
+    "db:down": "./scripts/db-down.sh",
+    "deps:build-policy": "node scripts/check-pnpm-build-policy.mjs",
+    "deps:review": "pnpm ignored-builds",
+    "peers:check": "pnpm peers check",
+    "dev:apps": "pnpm -r --parallel --filter @powerchain/backend --filter @powerchain/console --filter @powerchain/compute --filter @powerchain/frontend run dev"
   }
 }

@@ -6,7 +6,7 @@ const backend = await readFile(
 );
 for (const required of [
   "openapi:",
-  "version: 1.3.0",
+  "version: 1.3.1",
   "/api/v1/health:",
   "/api/v1/proofs:",
   "/api/v1/evidence-verifiers:",
@@ -34,7 +34,7 @@ const compute = await readFile(
 );
 for (const required of [
   "openapi:",
-  "version: 1.3.0",
+  "version: 1.3.1",
   "/v1/models:",
   "/v1/account:",
   "/v1/chat/completions:",

@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
-docker compose up -d postgres
-echo "PostgreSQL started."
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+./scripts/db-up.sh
+
+echo "PostgreSQL is ready."
 echo "Run in separate terminals:"
-echo "  pnpm dev:api"
-echo "  pnpm dev"
+echo "  pnpm dev:backend"
+echo "  pnpm dev:console"
+echo "  pnpm dev:compute"
+echo "  pnpm dev:frontend"
+echo "  pnpm dev:mobile"
 echo "  pnpm dev:evidence"
 echo "  pnpm dev:verifier"

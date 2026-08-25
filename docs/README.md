@@ -53,3 +53,4 @@ keys and deployment manifests.
 - [Available Models](AVAILABLE-MODELS.md)
 - [Agent Setup](AGENT-SETUP.md)
 - [v1.3 Release Notes](RELEASE-NOTES-v1.3.md)
+- [v1.3.1 Release Notes](RELEASE-NOTES-v1.3.1.md)

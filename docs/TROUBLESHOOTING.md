@@ -1,5 +1,75 @@
 # Troubleshooting
 
+## `ERR_PNPM_IGNORED_BUILDS`
+
+The workspace uses strict dependency build review. The committed policy intentionally allows
+`esbuild` and denies the optional native acceleration scripts from `bigint-buffer`,
+`bufferutil`, and `utf-8-validate`.
+
+Verify the repository policy:
+
+```bash
+node scripts/check-pnpm-build-policy.mjs
+```
+
+Then install:
+
+```bash
+pnpm install
+```
+
+If a **new** package appears in `ERR_PNPM_IGNORED_BUILDS`, do not blindly approve all builds.
+Review the package and add an explicit `true` or `false` entry to `allowBuilds` in
+`pnpm-workspace.yaml`.
+
+## Every `pnpm` command seems to run `pnpm install` again
+
+pnpm 11 can verify dependency state before script execution and may automatically install
+when stale. This repository explicitly uses:
+
+```yaml
+verifyDepsBeforeRun: warn
+```
+
+A stale workspace now warns instead of repeatedly reinstalling. Run:
+
+```bash
+pnpm install
+```
+
+and then retry the intended command.
+
+## `zsh: command not found: docker`
+
+Docker is not installed or not on `PATH`.
+
+Run:
+
+```bash
+pnpm doctor
+```
+
+For macOS, install/start Docker Desktop and rerun:
+
+```bash
+pnpm db:up
+```
+
+Alternatively configure a reachable PostgreSQL 17 server in `apps/backend/.env`. Docker is
+not required when that database endpoint is already reachable.
+
+## Database migration cannot connect
+
+Check the resolved backend environment and connectivity:
+
+```bash
+cat apps/backend/.env
+POWERCHAIN_DB_WAIT_ATTEMPTS=1 node scripts/check-database.mjs
+```
+
+Backend/database commands automatically load `apps/backend/.env`. Exported environment
+variables override values from that file.
+
 ## `minerctl health` reports inactive
 
 ```bash

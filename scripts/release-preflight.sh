@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-EXPECTED_VERSION="${EXPECTED_VERSION:-1.3.0}"
+EXPECTED_VERSION="${EXPECTED_VERSION:-1.3.1}"
 
 node - "$EXPECTED_VERSION" <<'NODE'
 const fs = require("fs");
@@ -33,12 +33,12 @@ for (const file of packages) {
 }
 NODE
 
-grep -q '^version = "1.3.0"$' programs/miner/Cargo.toml || {
+grep -q '^version = "1.3.1"$' programs/miner/Cargo.toml || {
   echo "programs/miner/Cargo.toml version mismatch" >&2
   exit 1
 }
 
-grep -q '^version = "1.3.0"$' services/device-agent/pyproject.toml || {
+grep -q '^version = "1.3.1"$' services/device-agent/pyproject.toml || {
   echo "device-agent version mismatch" >&2
   exit 1
 }

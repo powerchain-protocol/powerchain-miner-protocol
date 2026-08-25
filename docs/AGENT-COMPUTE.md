@@ -1,6 +1,6 @@
 # PowerChain Agent Compute
 
-**Version:** 1.3.0  
+**Version:** 1.3.1  
 **Public base URL:** `https://compute.powerchain.energy/v1`
 
 Agent Compute lets a PowerChain AgentOS agent fund and consume hosted compute using the same

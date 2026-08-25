@@ -2,3 +2,23 @@ packages:
   - "apps/*"
   - "packages/*"
   - "services/*"
+
+# pnpm 11 dependency scripts are deny-by-default. Keep this review explicit
+# and committed so installs do not stop on ERR_PNPM_IGNORED_BUILDS.
+strictDepBuilds: true
+
+allowBuilds:
+  # Required by tsx/Next/Expo tooling.
+  "esbuild@0.28.2": true
+
+  # Optional native acceleration paths. The JavaScript fallbacks are sufficient
+  # for this monorepo, so do not execute their install/build scripts.
+  bigint-buffer: false
+  bufferutil: false
+  utf-8-validate: false
+
+# pnpm 11 otherwise may automatically run a full workspace install before
+# every `pnpm run` when dependency state differs. Warn instead of reinstalling.
+verifyDepsBeforeRun: warn
+
+engineStrict: true

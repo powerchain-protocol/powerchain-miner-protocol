@@ -1,6 +1,6 @@
 # PowerChain Renewable Miner OS
 
-**Version:** 1.3.0  
+**Version:** 1.3.1  
 **Network:** Solana Devnet / Mainnet-Beta  
 **Reward asset:** PowerChain Miner (`MINER`) — Token-2022  
 **Node:** Raspberry Pi / Linux  
@@ -81,7 +81,7 @@ The control boundary is explicit:
 
 ### Release status
 
-`1.3.0` keeps the canonical v1 protocol and wallet-funded Agent Compute architecture, and adds live model discovery plus reusable Codex/Claude ACP setup skills and restore-safe local routing. It is **not** a claim that the
+`1.3.1` keeps the canonical v1 protocol, wallet-funded Agent Compute, live model discovery, and reusable Codex/Claude ACP setup while fixing pnpm/Docker development bootstrap reliability. It is **not** a claim that the
 Anchor program has received an external security audit or that the supplied placeholder
 program ID is deployable. Before Mainnet-Beta, complete the release gates in
 `docs/MIGRATION-v1.0.md` and `docs/DEPLOYMENT.md`.
@@ -202,6 +202,34 @@ See:
 - `docs/AVAILABLE-MODELS.md`
 - `docs/AGENT-SETUP.md`
 - `skills/acp-builder-setup/SKILL.md`
+
+
+
+## v1.3.1 development reliability fixes
+
+The local development path is now deterministic:
+
+```text
+doctor
+  ↓
+pnpm policy validation
+  ↓
+one dependency install
+  ↓
+PostgreSQL reachable?
+  ├── yes → continue
+  └── no  → Docker available/running?
+              ├── yes → compose + wait
+              └── no  → fail with external-DB/Docker instructions
+  ↓
+migration
+  ↓
+seed
+```
+
+This fixes the repeated `ERR_PNPM_IGNORED_BUILDS` / automatic reinstall loop and the previous
+bootstrap behavior that skipped a missing Docker binary but still attempted database
+migrations.
 
 
 ## Architecture
@@ -331,26 +359,61 @@ apps**.
 
 ## Quick start — product monorepo
 
+Run the repository bootstrap instead of pasting every command manually:
+
 ```bash
-cp apps/backend/.env.example apps/backend/.env
-cp apps/console/.env.example apps/console/.env.local
-cp apps/compute/.env.example apps/compute/.env
-cp apps/mobile/.env.example apps/mobile/.env
-
-docker compose up -d postgres
-
 corepack enable
-corepack use pnpm@11.22.0
-pnpm install
+pnpm bootstrap
+```
 
-pnpm db:migrate
-pnpm db:seed
+`pnpm bootstrap` now:
 
+1. pins/checks pnpm `11.22.0`;
+2. creates missing local `.env` files from the examples;
+3. verifies the committed dependency build-script policy;
+4. installs dependencies once;
+5. uses a committed lockfile when present, otherwise generates one once;
+6. starts PostgreSQL through Docker **only when an external PostgreSQL endpoint is not already reachable**;
+7. waits for PostgreSQL before running migrations;
+8. runs migrations and seed data.
+
+If Docker is not installed, the bootstrap stops with an actionable error instead of silently
+skipping Docker and then failing during `db:migrate`.
+
+macOS options:
+
+```text
+A. Install/start Docker Desktop, then rerun `pnpm bootstrap`.
+
+B. Use an existing PostgreSQL 17 server and set DATABASE_URL in:
+   apps/backend/.env
+```
+
+The backend and compute services load their app-local `.env` files automatically. Shell
+environment variables still take precedence.
+
+After bootstrap, start all web/API services together:
+
+```bash
+pnpm dev:apps
+```
+
+or in separate terminals:
+
+```bash
 pnpm dev:backend
 pnpm dev:console
 pnpm dev:compute
 pnpm dev:frontend
 pnpm dev:mobile
+```
+
+Development diagnostics:
+
+```bash
+pnpm doctor
+pnpm deps:build-policy
+pnpm peers:check
 ```
 
 Local surfaces:
@@ -370,6 +433,35 @@ pnpm typecheck
 pnpm api:typecheck
 pnpm build:web
 ```
+
+### pnpm dependency-build policy
+
+pnpm 11 blocks dependency lifecycle scripts until they are explicitly reviewed. This
+repository commits the review in `pnpm-workspace.yaml`:
+
+```yaml
+strictDepBuilds: true
+
+allowBuilds:
+  "esbuild@0.28.2": true
+  bigint-buffer: false
+  bufferutil: false
+  utf-8-validate: false
+```
+
+`esbuild` is allowed because the TypeScript/Next/Expo development toolchain requires its
+platform binary. The other three are optional native acceleration packages and remain
+explicitly denied, using their JavaScript fallbacks.
+
+The repository also sets:
+
+```yaml
+verifyDepsBeforeRun: warn
+```
+
+so a later `pnpm run` will not silently trigger another full workspace install. If dependency
+state is stale, pnpm emits a warning and the developer can run `pnpm install` explicitly.
+
 
 ## Quick start — Raspberry Pi/Linux
 
