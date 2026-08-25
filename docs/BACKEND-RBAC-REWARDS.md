@@ -94,12 +94,12 @@ apps/backend/
 cp apps/backend/.env.example apps/backend/.env
 docker compose up -d postgres
 
-pnpm install
-pnpm db:migrate
-pnpm db:seed
+corepack pnpm install
+corepack pnpm db:migrate
+corepack pnpm db:seed
 
-pnpm dev:api
-pnpm dev
+corepack pnpm dev:api
+corepack pnpm dev
 ```
 
 Backend: `http://localhost:3100`

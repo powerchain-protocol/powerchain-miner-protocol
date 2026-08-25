@@ -13,6 +13,23 @@ const documents = [
   "CONTRIBUTORS.md",
   "programs/README.md",
   "programs/miner/README.md",
+  "linux/rpm/helium/README.md",
+  "integrations/solana-depin/README.md",
+  "integrations/helium/README.md",
+  "docs/COMMUNITY-DEPIN.md",
+  "docs/CCT.md",
+  "docs/HELIUM.md",
+  "docs/SOLANA-PROGRAMS.md",
+  "packages/design-system/README.md",
+  "packages/api-client/README.md",
+  "packages/agent-compute/README.md",
+  "packages/powerchain-protocol/cct/README.md",
+  "packages/powerchain-protocol/README.md",
+  "services/verifier-worker/README.md",
+  "services/evidence-verifier/README.md",
+  "services/device-agent/README.md",
+  "services/README.md",
+  "programs/cct/README.md",
   "packages/powerchain-protocol/miner/README.md",
   "packages/miner-sdk/README.md",
   "apps/backend/README.md",
@@ -113,6 +130,42 @@ for (const instruction of instructions) {
   }
 }
 
+
+const cctProgram = await readFile(
+  resolve(root, "programs/cct/src/lib.rs"),
+  "utf8",
+);
+const cctReadme = await readFile(
+  resolve(root, "programs/cct/README.md"),
+  "utf8",
+);
+
+const cctInstructions = [
+  "initialize_registry",
+  "register_project",
+  "set_project_active",
+  "issue_verified_batch",
+  "retire_credits",
+  "set_paused",
+  "set_verifier",
+  "propose_authority",
+  "cancel_authority_transfer",
+  "accept_authority",
+];
+
+for (const instruction of cctInstructions) {
+  if (!cctProgram.includes(`pub fn ${instruction}`)) {
+    errors.push(
+      `programs/cct/src/lib.rs: missing expected ${instruction}`,
+    );
+  }
+  if (!cctReadme.includes(`\`${instruction}\``)) {
+    errors.push(
+      `programs/cct/README.md: undocumented ${instruction}`,
+    );
+  }
+}
+
 for (const required of [
   "CHANGELOG.md",
   "CONTRIBUTORS.md",
@@ -131,5 +184,5 @@ if (errors.length) {
 }
 
 console.log(
-  `Documentation: ${documents.length} canonical documents and ${instructions.length} Miner instructions verified`,
+  `Documentation: ${documents.length} canonical documents, ${instructions.length} Miner instructions and ${cctInstructions.length} CCT instructions verified`,
 );

@@ -18,11 +18,11 @@ The SDK consumes and re-exports canonical protocol primitives from [`@powerchain
 ## Commands
 
 ```bash
-pnpm miner:initialize -- <env-file>
-pnpm miner:register-owner -- <env-file>
-pnpm miner:register-device -- <env-file>
-pnpm miner:reassign-device -- <env-file>
-pnpm miner:inspect -- <env-file>
+corepack pnpm miner:initialize -- <env-file>
+corepack pnpm miner:register-owner -- <env-file>
+corepack pnpm miner:register-device -- <env-file>
+corepack pnpm miner:reassign-device -- <env-file>
+corepack pnpm miner:inspect -- <env-file>
 ```
 
 File-keypair administration is intended for controlled bootstrap/Devnet workflows. Mainnet owner and authority operations should use approved user or organizational signing flows.

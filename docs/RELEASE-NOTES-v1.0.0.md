@@ -73,7 +73,7 @@ catalog.
 
 ```bash
 corepack enable
-pnpm bootstrap
+corepack pnpm bootstrap
 ```
 
 The bootstrap:
@@ -109,3 +109,21 @@ All public app/package/service metadata is `1.0.0`.
 Database migration sequence numbers are internal schema-evolution identifiers and are not
 public product version numbers. They remain stable so already-initialized databases do not
 re-run or misidentify applied migrations.
+
+
+## Solana ecosystem, Helium and CCT
+
+Canonical `1.0.0` also includes:
+
+- centralized SPL Token, Token-2022, Associated Token Account and Metaplex program IDs;
+- SPL/Token-2022 classification and Metaplex Token Metadata PDA helpers;
+- Helium program/token registry, Entity API and multi-gateway client contracts;
+- authenticated Helium backend BFF routes;
+- safe PowerChain compatibility RPM builders for explicit Helium upstream binaries;
+- Solana Developers DePIN pattern contracts without a fabricated `@solana/depin` package;
+- `programs/cct` and `@powerchain-protocol/cct` for verified carbon issuance/retirement;
+- community-energy listing/reservation contracts and a public DePIN feature surface;
+- complete service documentation for device, evidence-verifier and settlement-worker boundaries.
+
+Both PowerChain on-chain programs retain placeholder source IDs until actual deployment
+identities are synchronized. The release therefore does not claim Mainnet deployment readiness.

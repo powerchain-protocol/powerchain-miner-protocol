@@ -33,10 +33,10 @@ Internal routes are service-to-service contracts and must not be exposed as equi
 
 ```bash
 cp apps/backend/.env.example apps/backend/.env
-pnpm db:up
-pnpm db:migrate
-pnpm db:seed
-pnpm dev:backend
+corepack pnpm db:up
+corepack pnpm db:migrate
+corepack pnpm db:seed
+corepack pnpm dev:backend
 ```
 
 Default URL:
@@ -54,3 +54,32 @@ The app loads `apps/backend/.env` automatically; already-exported process enviro
 - [`postman/`](postman/)
 - [`../../docs/BACKEND-RBAC-REWARDS.md`](../../docs/BACKEND-RBAC-REWARDS.md)
 - [`../../docs/SECURITY.md`](../../docs/SECURITY.md)
+
+
+## Helium integration
+
+Optional Helium connectivity is exposed through authenticated BFF routes so browser clients
+do not talk directly to gateway management services:
+
+```text
+GET /api/v1/integrations/helium/programs
+GET /api/v1/integrations/helium/gateways
+GET /api/v1/integrations/helium/gateways/:mac
+GET /api/v1/integrations/helium/gateways/:mac/packets
+GET /api/v1/integrations/helium/entity/wallet/:wallet
+```
+
+Configure `HELIUM_MULTI_GATEWAY_URL`, optional read API key, and
+`HELIUM_ENTITY_API_URL` in the backend environment. Arbitrary gateway signing is deliberately
+not exposed as a public/BFF route.
+
+## Program domains
+
+The backend recognizes two PowerChain Solana program domains:
+
+- Miner — verified Proof-of-Energy reward accrual and Token-2022 claim settlement;
+- CCT — verified carbon-credit issuance and burn retirement.
+
+Their deployment IDs and authorities remain separate. External canonical SPL, Token-2022,
+Metaplex and Helium program IDs are centralized in the protocol package rather than copied
+into route code.

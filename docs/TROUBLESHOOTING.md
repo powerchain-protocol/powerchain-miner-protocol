@@ -7,15 +7,15 @@ This is a successful partial development bootstrap, not an installation failure.
 Continue with frontend/mobile/tooling work, or start/configure a database and run:
 
 ```bash
-pnpm db:up
-pnpm db:migrate
-pnpm db:seed
+corepack pnpm db:up
+corepack pnpm db:migrate
+corepack pnpm db:seed
 ```
 
 For strict all-in-one setup use:
 
 ```bash
-pnpm bootstrap:db
+corepack pnpm bootstrap:db
 ```
 
 ## `ERR_PNPM_IGNORED_BUILDS`
@@ -33,7 +33,7 @@ node scripts/check-pnpm-build-policy.mjs
 Then install:
 
 ```bash
-pnpm install
+corepack pnpm install
 ```
 
 If a **new** package appears in `ERR_PNPM_IGNORED_BUILDS`, do not blindly approve all builds.
@@ -42,7 +42,7 @@ Review the package and add an explicit `true` or `false` entry to `allowBuilds` 
 
 ## Every `pnpm` command seems to run `pnpm install` again
 
-pnpm 11 can verify dependency state before script execution and may automatically install
+corepack pnpm 11 can verify dependency state before script execution and may automatically install
 when stale. This repository explicitly uses:
 
 ```yaml
@@ -52,7 +52,7 @@ verifyDepsBeforeRun: warn
 A stale workspace now warns instead of repeatedly reinstalling. Run:
 
 ```bash
-pnpm install
+corepack pnpm install
 ```
 
 and then retry the intended command.
@@ -64,13 +64,13 @@ Docker is not installed or not on `PATH`.
 Run:
 
 ```bash
-pnpm doctor
+corepack pnpm doctor
 ```
 
 For macOS, install/start Docker Desktop and rerun:
 
 ```bash
-pnpm db:up
+corepack pnpm db:up
 ```
 
 Alternatively configure a reachable PostgreSQL 17 server in `apps/backend/.env`. Docker is

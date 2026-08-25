@@ -8,7 +8,7 @@ The workspace image is built from:
 
 ```text
 node:24.19.0-bookworm-slim
-pnpm 11.23.0
+corepack pnpm 11.23.0
 ```
 
 PostgreSQL uses the explicit supported patch image:
@@ -22,7 +22,7 @@ postgres:17.11-alpine3.24
 ```bash
 cp docker/.env.example docker/.env
 # edit docker/.env
-pnpm docker:up
+corepack pnpm docker:up
 ```
 
 Core services:
@@ -37,13 +37,13 @@ frontend   3002
 Agent Compute is opt-in because it requires a real upstream compute credential:
 
 ```bash
-pnpm docker:compute
+corepack pnpm docker:compute
 ```
 
 Expo/Metro is also opt-in:
 
 ```bash
-pnpm docker:mobile
+corepack pnpm docker:mobile
 ```
 
 ## Database lifecycle

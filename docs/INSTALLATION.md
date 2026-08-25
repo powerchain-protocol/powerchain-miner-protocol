@@ -7,7 +7,7 @@ Requirements:
 ```text
 Node.js >=24.19.0 <25
 Corepack
-pnpm 11.23.0
+corepack pnpm 11.23.0
 PostgreSQL 17
 Docker Desktop/Engine (optional when using an external PostgreSQL server)
 ```
@@ -16,7 +16,7 @@ Recommended:
 
 ```bash
 corepack enable
-pnpm bootstrap
+corepack pnpm bootstrap
 ```
 
 The default bootstrap does not require Docker. If PostgreSQL is unavailable and Docker is not installed/running, dependency/environment setup still completes and reports:
@@ -28,7 +28,7 @@ WORKSPACE_READY / DATABASE_NOT_STARTED
 Require a ready database in the same command with:
 
 ```bash
-pnpm bootstrap:db
+corepack pnpm bootstrap:db
 ```
 
 The bootstrap creates local env files if they are missing and loads
@@ -48,7 +48,7 @@ DATABASE_URL=postgres://user:password@host:5432/database
 Then:
 
 ```bash
-pnpm bootstrap
+corepack pnpm bootstrap
 ```
 
 ### Dependency lifecycle scripts
@@ -70,13 +70,13 @@ Do not approve every transitive build script globally just to make installation 
 Inspect current policy:
 
 ```bash
-pnpm deps:build-policy
+corepack pnpm deps:build-policy
 ```
 
 Inspect any newly discovered dependency build scripts:
 
 ```bash
-pnpm deps:review
+corepack pnpm deps:review
 ```
 
 A new unreviewed lifecycle script should fail installation until it is deliberately reviewed.
@@ -87,7 +87,7 @@ If `pnpm-lock.yaml` is absent, bootstrap generates it once with a non-frozen ins
 the resulting lockfile. Subsequent bootstrap runs use:
 
 ```bash
-pnpm install --frozen-lockfile
+corepack pnpm install --frozen-lockfile
 ```
 
 ### Start services
@@ -95,24 +95,24 @@ pnpm install --frozen-lockfile
 All primary web/API services:
 
 ```bash
-pnpm dev:apps
+corepack pnpm dev:apps
 ```
 
 Mobile remains a separate Expo process:
 
 ```bash
-pnpm dev:mobile
+corepack pnpm dev:mobile
 ```
 
 Or run components separately:
 
 ```bash
-pnpm dev:backend
-pnpm dev:console
-pnpm dev:compute
-pnpm dev:frontend
-pnpm dev:evidence
-pnpm dev:verifier
+corepack pnpm dev:backend
+corepack pnpm dev:console
+corepack pnpm dev:compute
+corepack pnpm dev:frontend
+corepack pnpm dev:evidence
+corepack pnpm dev:verifier
 ```
 
 
@@ -152,7 +152,7 @@ Without these controls a signed proof is not reward-eligible.
 Generate a dedicated keypair:
 
 ```bash
-pnpm verifier:keygen
+corepack pnpm verifier:keygen
 ```
 
 Keep the private PEM on the evidence-verifier host. Register the public PEM through the

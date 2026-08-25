@@ -37,7 +37,7 @@ The private key remains on the evidence-verifier host.
 Generate a key:
 
 ```bash
-pnpm verifier:keygen
+corepack pnpm verifier:keygen
 ```
 
 Default output is ignored by Git under `target/keys/`.

@@ -51,4 +51,13 @@ if command -v corepack >/dev/null 2>&1 && [[ -d node_modules ]]; then
   corepack pnpm typecheck:sdk
 fi
 
+echo "[check] CCT program"
+node scripts/check-cct-program.mjs >/dev/null
+
+echo "[check] services"
+node scripts/check-services.mjs
+
+echo "[check] Solana integrations"
+node scripts/check-solana-integrations.mjs
+
 echo "[check] OK"

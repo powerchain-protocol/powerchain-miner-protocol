@@ -149,18 +149,29 @@
       "import": "./dist/pay/index.js",
       "default": "./dist/pay/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./helium": {
+      "types": "./dist/helium/index.d.ts",
+      "import": "./dist/helium/index.js",
+      "default": "./dist/helium/index.js"
+    },
+    "./community-energy": {
+      "types": "./dist/community-energy/index.d.ts",
+      "import": "./dist/community-energy/index.js",
+      "default": "./dist/community-energy/index.js"
+    }
   },
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
-    "build": "pnpm clean && tsc -p tsconfig.build.json",
+    "build": "corepack pnpm clean && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "pack:inspect": "npm pack --dry-run --json",
-    "prepack": "pnpm build",
-    "prepublishOnly": "pnpm typecheck && pnpm build"
+    "prepack": "corepack pnpm build",
+    "prepublishOnly": "corepack pnpm typecheck && corepack pnpm build"
   },
   "dependencies": {
-    "@solana/web3.js": "1.98.4"
+    "@solana/web3.js": "1.98.4",
+    "@solana/spl-token": "0.4.15"
   },
   "devDependencies": {
     "@types/node": "24.13.3",

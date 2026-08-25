@@ -1,5 +1,6 @@
 import { AgentComputeSection } from "@/components/sections/AgentComputeSection";
 import { ArchitectureSection } from "@/components/sections/ArchitectureSection";
+import { CommunityDepinSection } from "@/components/sections/CommunityDepinSection";
 import { FeatureGrid } from "@/components/sections/FeatureGrid";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { MobileSection } from "@/components/sections/MobileSection";
@@ -15,6 +16,7 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <FeatureGrid />
+        <CommunityDepinSection />
         <ProofFlowSection />
         <ArchitectureSection />
         <AgentComputeSection />

@@ -1,0 +1,18 @@
+keys_dir = "/var/lib/helium-multi-gateway/keys"
+region = "EU868"
+api_addr = "127.0.0.1:4468"
+
+# Configure secrets on the deployed host, not in source control.
+# read_api_key = "..."
+# write_api_key = "..."
+
+[gwmp]
+addr = "0.0.0.0"
+port = 1680
+
+[router]
+uri = "http://mainnet-router.helium.io:8080/"
+queue = 100
+
+[log]
+level = "info"

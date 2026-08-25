@@ -8,6 +8,19 @@ The format follows the principles of [Keep a Changelog](https://keepachangelog.c
 ## [Unreleased]
 
 
+### Added — Solana ecosystem, Helium and CCT
+
+- centralized canonical SPL Token, Token-2022, Associated Token Account and Metaplex program IDs;
+- added token-program classification and Metaplex Token Metadata PDA helpers;
+- added Helium Solana program/token registry plus multi-gateway and Entity API clients;
+- added authenticated Helium gateway/entity BFF routes and safe local-binary RPM compatibility builders;
+- added Solana DePIN reference contracts without fabricating an `@solana/depin` npm dependency;
+- added `programs/cct` for verifier-authorized carbon-credit batch issuance and irreversible burn retirement;
+- added `@powerchain-protocol/cct` typed CCT units, PDAs, project/batch/retirement contracts and build surface;
+- added SolarShare-style community DePIN contracts and a responsive public website feature section;
+- added complete service READMEs and repository checks for device-agent, evidence-verifier and settlement worker boundaries.
+
+
 ### Organized — application architecture
 
 - reorganized console libraries into `lib/core`, `lib/chains`, `lib/wallets`, and server-only `lib/market-data` domains;

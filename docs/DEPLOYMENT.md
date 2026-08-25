@@ -7,7 +7,7 @@
 ```bash
 corepack enable
 corepack prepare pnpm@11.23.0 --activate
-pnpm install --no-frozen-lockfile
+corepack pnpm install --no-frozen-lockfile
 ```
 
 For a tagged deterministic release, generate and commit `pnpm-lock.yaml` and use
@@ -16,9 +16,9 @@ For a tagged deterministic release, generate and commit `pnpm-lock.yaml` and use
 ### 2. Database
 
 ```bash
-pnpm db:migrate
-pnpm db:seed
-pnpm db:smoke
+corepack pnpm db:migrate
+corepack pnpm db:seed
+corepack pnpm db:smoke
 ```
 
 ### 3. Program identity
@@ -62,14 +62,14 @@ node scripts/verify-deployment-manifest.mjs devnet
 ### 6. Initialize protocol
 
 ```bash
-pnpm miner:initialize -- <env-file>
+corepack pnpm miner:initialize -- <env-file>
 ```
 
 ### 7. Register owner and device
 
 ```bash
-pnpm miner:register-owner -- <owner-env-file>
-pnpm miner:register-device -- <device-env-file>
+corepack pnpm miner:register-owner -- <owner-env-file>
+corepack pnpm miner:register-device -- <device-env-file>
 ```
 
 ### 8. Verify backend readiness
@@ -112,7 +112,7 @@ REQUIRE_LOCKFILE=1 \
 REQUIRE_DEPLOYMENT_IDENTITIES=1 \
 REQUIRE_VERIFIED_DEPLOYMENT=1 \
 POWERCHAIN_DEPLOYMENT_CLUSTER=mainnet-beta \
-pnpm release:preflight
+corepack pnpm release:preflight
 ```
 
 
@@ -141,3 +141,54 @@ REQUIRE_BUILD_EVIDENCE=1 \
 REQUIRE_VERIFIED_DEPLOYMENT=1 \
 node scripts/verify-deployment-manifest.mjs mainnet-beta
 ```
+
+
+## Multiple PowerChain programs
+
+Canonical `1.0.0` now contains two independent Anchor programs:
+
+```text
+programs/miner
+programs/cct
+```
+
+Both source artifacts use placeholder IDs until synchronized.
+
+Miner:
+
+```bash
+corepack pnpm program:miner:sync-id -- devnet /secure/miner-keypair.json
+```
+
+CCT:
+
+```bash
+corepack pnpm program:cct:sync-id -- devnet /secure/cct-keypair.json
+```
+
+Use separate deployment/upgrade-authority policy where practical. CCT issuance and Miner
+energy-reward settlement are different economic domains.
+
+Before CCT activation also verify:
+
+- CCT mint owner is the intended SPL Token or Token-2022 program;
+- mint decimals are exactly `6`;
+- CCT mint authority is the canonical `cct-mint-authority` PDA;
+- `POWERCHAIN_CCT_MINT` matches the deployed mint;
+- verifier identity and project evidence policy are approved;
+- token metadata/Metaplex records match the deployment manifest.
+
+## Helium edge deployment
+
+PowerChain does not redistribute an unpinned Helium "latest" binary. For RHEL/Fedora-style
+edge images, build compatibility RPMs only from an explicitly acquired and verified upstream
+binary:
+
+```bash
+HELIUM_BINARY=/secure/build/helium_gateway \
+HELIUM_VERSION=<verified-version> \
+./linux/rpm/helium/build-rpm.sh gateway
+```
+
+For multi-gateway, keep `read_api_key` and `write_api_key` outside source control and bind the
+REST API to a private interface unless remote access is deliberately protected.

@@ -8,8 +8,9 @@ Public marketing website and installable PWA for PowerChain Renewable Miner OS a
 ## Responsibilities
 
 - product positioning and architecture explanation;
-- Proof-of-Energy and Agent Compute feature surfaces;
+- Proof-of-Energy, community DePIN, CCT and Agent Compute feature surfaces;
 - security/trust-boundary communication;
+- Solana/Helium/IoT ecosystem and community-energy positioning;
 - documentation and console entry points;
 - installable PWA shell.
 
@@ -18,7 +19,7 @@ It is intentionally separate from the authenticated operator console and must no
 ## Development
 
 ```bash
-pnpm dev:frontend
+corepack pnpm dev:frontend
 ```
 
 Default URL:

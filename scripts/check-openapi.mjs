@@ -22,6 +22,9 @@ for (const required of [
   "/api/v1/agents/{agentId}/compute:",
   "/api/v1/compute/models:",
   "/api/v1/releases/latest:",
+  "/api/v1/integrations/helium/entity/wallet/{wallet}:",
+  "/api/v1/integrations/helium/gateways:",
+  "/api/v1/integrations/helium/programs:",
 ]) {
   if (!backend.includes(required)) {
     throw new Error(

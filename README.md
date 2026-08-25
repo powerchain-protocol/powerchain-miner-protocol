@@ -118,13 +118,15 @@ AUDIT
 │   └── mobile/              Expo / React Native companion
 ├── packages/
 │   ├── powerchain-protocol/
-│   │   └── miner/           canonical Miner protocol contracts
+│   │   ├── miner/           Miner/DePIN/Solana/Helium contracts
+│   │   └── cct/             carbon-credit token contracts
 │   ├── miner-sdk/           Anchor/Solana administration SDK
 │   ├── agent-compute/       compute client, billing and top-up primitives
 │   ├── api-client/          runtime-neutral API client
 │   └── design-system/       shared web/native design tokens
 ├── programs/
-│   └── miner/               Anchor Miner program
+│   ├── miner/               Anchor Miner program
+│   └── cct/                 Anchor carbon-credit program
 ├── services/
 │   ├── device-agent/        Raspberry Pi/Linux node
 │   ├── evidence-verifier/   signed evidence verification
@@ -181,6 +183,7 @@ set_device_enabled
 set_paused
 set_verifier
 update_reward_policy
+update_mining_rules
 propose_authority
 cancel_authority_transfer
 accept_authority
@@ -188,7 +191,64 @@ accept_authority
 
 The full account constraints, reward invariants, authority model, and deployment procedure are documented in [`programs/miner/README.md`](programs/miner/README.md).
 
+
 ---
+
+## Solana, Metaplex and DePIN ecosystem
+
+PowerChain `1.0.0` distinguishes **external canonical Solana programs** from PowerChain's own
+deployment-specific program IDs.
+
+Supported external surfaces include:
+
+```text
+SPL Token
+Token-2022
+Associated Token Accounts
+Metaplex Token Metadata
+Metaplex Core
+Metaplex Bubblegum
+Helium Solana programs and token mints
+```
+
+Canonical IDs are centralized in [`docs/SOLANA-PROGRAMS.md`](docs/SOLANA-PROGRAMS.md) and
+`@powerchain-protocol/miner/solana` rather than duplicated across applications.
+
+The Miner reward program remains Token-2022-only in canonical v1 so its persisted account and
+treasury contract does not change silently. Broader token support is exposed through the
+protocol package and dedicated asset programs.
+
+### Helium
+
+PowerChain can use Helium as a LoRaWAN/DePIN connectivity provider through gateway-rs,
+helium-multi-gateway and the Helium Entity API. Gateway identity stays separate from the
+PowerChain device Ed25519 key, evidence-verifier key and Solana settlement authority.
+
+Backend BFF routes include:
+
+```http
+GET /api/v1/integrations/helium/programs
+GET /api/v1/integrations/helium/gateways
+GET /api/v1/integrations/helium/gateways/:mac
+GET /api/v1/integrations/helium/gateways/:mac/packets
+GET /api/v1/integrations/helium/entity/wallet/:wallet
+```
+
+For RHEL/Fedora-style edge images, PowerChain includes safe compatibility RPM builders under
+`linux/rpm/helium/`. They require an explicitly supplied upstream binary and version and do
+not fetch an unpinned `latest` executable.
+
+See [`docs/HELIUM.md`](docs/HELIUM.md) and
+[`integrations/helium/README.md`](integrations/helium/README.md).
+
+### Solana DePIN pattern
+
+PowerChain follows the Solana Developers DePIN architecture pattern—physical device identity,
+off-chain/oracle verification, PDA-backed state and controlled on-chain settlement. The repo
+does not invent a nonexistent `@solana/depin` npm dependency; the integration boundary is
+implemented in `@powerchain-protocol/miner/depin`.
+
+See [`integrations/solana-depin/README.md`](integrations/solana-depin/README.md).
 
 ## Proof of Energy
 
@@ -289,11 +349,72 @@ Solana Pay transfer-request helpers live in `@powerchain-protocol/miner/pay`. Ag
 flows use the separately pinned pay.sh CLI in sandbox-first mode.
 
 ```bash
-pnpm pay:version
-pnpm pay:sandbox -- https://debugger.pay.sh/mpp/quote/AAPL
+corepack pnpm pay:version
+corepack pnpm pay:sandbox -- https://debugger.pay.sh/mpp/quote/AAPL
 ```
 
 See [PAY.SH skill](skills/PAY.SH.md) and [Key Management](docs/KEY-MANAGEMENT.md).
+
+
+## Carbon Credit Token (CCT)
+
+PowerChain CCT is a separate verified carbon-credit issuance and retirement domain:
+
+```text
+verified carbon project + methodology evidence
+        ↓
+authorized CCT verifier
+        ↓
+issue_verified_batch
+        ↓
+CCT mint
+        ↓
+wallet / marketplace
+        ↓
+retire_credits
+        ↓
+token burn + RetirementReceipt
+```
+
+Canonical unit:
+
+```text
+1 CCT = 1 metric tonne CO2e
+decimals = 6
+```
+
+The actual CCT mint and CCT program ID remain deployment-configured; source code does not
+fabricate production addresses. The registry can bind to classic SPL Token or Token-2022 at
+initialization, with Token-2022 recommended for new deployments. Metadata may use Token-2022
+metadata extensions or Metaplex, but metadata never replaces project/batch verification.
+
+See [`programs/cct/README.md`](programs/cct/README.md),
+[`packages/powerchain-protocol/cct/README.md`](packages/powerchain-protocol/cct/README.md), and
+[`docs/CCT.md`](docs/CCT.md).
+
+---
+
+## Community Energy DePIN
+
+The public product now includes a professional community-DePIN capability surface for:
+
+- Solana wallet integration;
+- solar panel monitoring;
+- IoT/smart-meter/Helium device integration;
+- energy analytics;
+- local energy marketplace intents;
+- peer-to-peer energy trading.
+
+The marketplace contract remains evidence-first:
+
+```text
+LIST → REVIEW → RESERVE → DELIVER → METER EVIDENCE → RECONCILE
+     → WALLET/PAYMENT AUTHORIZATION → SETTLED
+```
+
+See [`docs/COMMUNITY-DEPIN.md`](docs/COMMUNITY-DEPIN.md).
+
+---
 
 ## Agent Compute
 
@@ -357,6 +478,7 @@ source-rotations
 audit
 agents
 compute
+integrations / Helium
 releases
 internal workers
 settlement leases / intents
@@ -397,7 +519,7 @@ The product design is light-first: white surfaces, light-gray canvas, dark green
 
 ```text
 Node.js       >=24.19.0 <25
-pnpm          11.23.0
+corepack pnpm 11.23.0
 PostgreSQL    17
 Rust/Anchor   required for on-chain program build/test
 Docker        optional for native development; recommended for local stack
@@ -413,10 +535,11 @@ The workspace commits an explicit pnpm dependency-build policy. New dependency i
 
 ```bash
 corepack enable
-pnpm bootstrap
+corepack prepare pnpm@11.23.0 --activate
+corepack pnpm bootstrap
 ```
 
-`pnpm bootstrap`:
+`corepack pnpm bootstrap`:
 
 1. activates the exact project pin, pnpm `11.23.0`, through Corepack;
 2. creates missing local environment files;
@@ -435,45 +558,54 @@ WORKSPACE_READY / DATABASE_NOT_STARTED
 Use the strict database bootstrap when backend database readiness is mandatory:
 
 ```bash
-pnpm bootstrap:db
+corepack pnpm bootstrap:db
 ```
 
 Or explicitly prepare only the JavaScript/tooling workspace:
 
 ```bash
-pnpm bootstrap:no-db
+corepack pnpm bootstrap:no-db
 ```
 
 Start the main application stack:
 
 ```bash
-pnpm dev:apps
+corepack pnpm dev:apps
 ```
 
 Start Expo separately:
 
 ```bash
-pnpm dev:mobile
+corepack pnpm dev:mobile
+```
+
+Repository/service/program checks:
+
+```bash
+corepack pnpm services:check
+corepack pnpm integrations:check
+corepack pnpm program:check
+corepack pnpm program:cct:check
 ```
 
 ### Docker
 
 ```bash
 cp docker/.env.example docker/.env
-pnpm docker:build
-pnpm docker:up
+corepack pnpm docker:build
+corepack pnpm docker:up
 ```
 
 Optional Agent Compute service:
 
 ```bash
-pnpm docker:compute
+corepack pnpm docker:compute
 ```
 
 Optional mobile/Metro profile:
 
 ```bash
-pnpm docker:mobile
+corepack pnpm docker:mobile
 ```
 
 See [`docker/README.md`](docker/README.md).
@@ -484,56 +616,56 @@ See [`docker/README.md`](docker/README.md).
 
 ```bash
 # Environment / dependencies
-pnpm doctor
-pnpm bootstrap
-pnpm deps:build-policy
-pnpm peers:check
+corepack pnpm doctor
+corepack pnpm bootstrap
+corepack pnpm deps:build-policy
+corepack pnpm peers:check
 
 # Development
-pnpm dev:apps
-pnpm dev:backend
-pnpm dev:console
-pnpm dev:compute
-pnpm dev:frontend
-pnpm dev:mobile
-pnpm dev:evidence
-pnpm dev:verifier
+corepack pnpm dev:apps
+corepack pnpm dev:backend
+corepack pnpm dev:console
+corepack pnpm dev:compute
+corepack pnpm dev:frontend
+corepack pnpm dev:mobile
+corepack pnpm dev:evidence
+corepack pnpm dev:verifier
 
 # Database
-pnpm db:up
-pnpm db:migrate
-pnpm db:seed
-pnpm db:smoke
+corepack pnpm db:up
+corepack pnpm db:migrate
+corepack pnpm db:seed
+corepack pnpm db:smoke
 
 # Solana / Anchor program
-pnpm program:doctor
-pnpm program:check
-pnpm program:fmt
-pnpm program:test
-pnpm program:build
-pnpm program:anchor-test
+corepack pnpm program:doctor
+corepack pnpm program:check
+corepack pnpm program:fmt
+corepack pnpm program:test
+corepack pnpm program:build
+corepack pnpm program:anchor-test
 
 # Validation
-pnpm typecheck
-pnpm api:typecheck
-pnpm check
-pnpm test
-pnpm openapi:check
-pnpm release:preflight
+corepack pnpm typecheck
+corepack pnpm api:typecheck
+corepack pnpm check
+corepack pnpm test
+corepack pnpm openapi:check
+corepack pnpm release:preflight
 
 # Miner administration
-pnpm miner:initialize -- <env-file>
-pnpm miner:register-owner -- <env-file>
-pnpm miner:register-device -- <env-file>
-pnpm miner:reassign-device -- <env-file>
-pnpm miner:inspect -- <env-file>
+corepack pnpm miner:initialize -- <env-file>
+corepack pnpm miner:register-owner -- <env-file>
+corepack pnpm miner:register-device -- <env-file>
+corepack pnpm miner:reassign-device -- <env-file>
+corepack pnpm miner:inspect -- <env-file>
 
 # Docker
-pnpm docker:build
-pnpm docker:up
-pnpm docker:logs
-pnpm docker:ps
-pnpm docker:down
+corepack pnpm docker:build
+corepack pnpm docker:up
+corepack pnpm docker:logs
+corepack pnpm docker:ps
+corepack pnpm docker:down
 ```
 
 ---
@@ -550,7 +682,9 @@ PowerChain treats the following boundaries as non-interchangeable:
 | Backend policy | economic calculation and tenant limits |
 | Human/role approval | high-consequence authorization workflow |
 | Reward-owner wallet | claim authorization |
-| Miner program | deterministic on-chain settlement rules |
+| Miner program | deterministic on-chain renewable reward settlement rules |
+| CCT program | verified carbon-credit issuance and irreversible retirement |
+| Helium gateway | LoRaWAN/DePIN connectivity only; never treasury or reward authority |
 | PostgreSQL ledger/audit | accounting and reconciliation |
 
 A device signature proves that an enrolled key signed a payload. It does **not** by itself prove that the physical measurement is true.
@@ -574,6 +708,11 @@ Recommended paths:
 | Operator guide | [`docs/OPERATOR-GUIDE.md`](docs/OPERATOR-GUIDE.md) |
 | Architecture | [`docs/RENEWABLE-MINER-ARCHITECTURE.md`](docs/RENEWABLE-MINER-ARCHITECTURE.md) |
 | Proof of Energy | [`docs/PROOF-OF-ENERGY.md`](docs/PROOF-OF-ENERGY.md) |
+| Solana programs | [`docs/SOLANA-PROGRAMS.md`](docs/SOLANA-PROGRAMS.md) |
+| Helium | [`docs/HELIUM.md`](docs/HELIUM.md) |
+| Carbon Credit Token | [`docs/CCT.md`](docs/CCT.md) |
+| Community Energy DePIN | [`docs/COMMUNITY-DEPIN.md`](docs/COMMUNITY-DEPIN.md) |
+| Services | [`services/README.md`](services/README.md) |
 | Evidence verification | [`docs/EVIDENCE-VERIFICATION.md`](docs/EVIDENCE-VERIFICATION.md) |
 | Chain binding | [`docs/CHAIN-BINDING.md`](docs/CHAIN-BINDING.md) |
 | Claim settlement | [`docs/CLAIM-SETTLEMENT-v1.md`](docs/CLAIM-SETTLEMENT-v1.md) |
@@ -601,9 +740,9 @@ Contributions should preserve the canonical trust boundary and avoid introducing
 Before submitting changes:
 
 ```bash
-pnpm check
-pnpm test
-pnpm release:preflight
+corepack pnpm check
+corepack pnpm test
+corepack pnpm release:preflight
 ```
 
 Read [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
@@ -618,7 +757,8 @@ Read [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`CONTRIBUTORS.md`](CONTRIBUTORS.m
 4. **Authority is separated.** Device, verifier, finance, wallet, treasury, and program authorities are distinct.
 5. **Autonomy is bounded.** Agents can prepare and execute only within explicit policy and wallet authorization boundaries.
 6. **Canonical contracts are shared.** Protocol constants and math belong in `@powerchain-protocol/miner`, not duplicated across apps.
-7. **Fail closed.** Missing deployment configuration, unknown model routes, unreviewed build scripts, or unverifiable settlement should stop the workflow rather than silently degrade.
+7. **Tokenization follows verified claims.** SPL/Token-2022/Metaplex metadata cannot substitute for energy or carbon verification.
+8. **Fail closed.** Missing deployment configuration, unknown model routes, unreviewed build scripts, or unverifiable settlement should stop the workflow rather than silently degrade.
 
 ### Package publishing
 

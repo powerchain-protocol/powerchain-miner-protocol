@@ -1,5 +1,5 @@
 [workspace]
-members = ["programs/miner"]
+members = ["programs/miner", "programs/cct"]
 resolver = "2"
 
 [profile.release]

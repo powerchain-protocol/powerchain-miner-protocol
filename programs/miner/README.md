@@ -156,6 +156,18 @@ Because the account is created with deterministic claim seeds, the same claim ID
 | `cancel_authority_transfer` | current authority | clear an unaccepted pending authority transfer |
 | `accept_authority` | pending authority | complete authority transfer |
 
+
+## Ecosystem token support
+
+PowerChain as a platform supports classic SPL Token, Token-2022 and Metaplex metadata
+surfaces. The **Miner v1 reward treasury remains intentionally Token-2022-only** so its
+existing state/account contract does not change silently under canonical `1.0.0`.
+
+For new multi-standard tokenized assets, use protocol-level token helpers or the CCT program.
+
+Canonical addresses are documented in
+[`../../docs/SOLANA-PROGRAMS.md`](../../docs/SOLANA-PROGRAMS.md).
+
 ## Proof validation
 
 `submit_verified_proof` accepts:
@@ -249,10 +261,12 @@ DeviceStatusChanged
 ProofAccepted
 RewardsClaimed
 RewardPolicyUpdated
+MiningRulesUpdated
 VerifierUpdated
 PauseChanged
 AuthorityProposed
 AuthorityAccepted
+AuthorityTransferCancelled
 ```
 
 These events complement, but do not replace, backend transaction verification and accounting reconciliation.

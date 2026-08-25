@@ -252,6 +252,54 @@ paths:
         "200": {description: Settlement state reconciled}
         "409": {description: Lease lost}
 
+
+  /api/v1/integrations/helium/programs:
+    get:
+      summary: Read canonical Helium Solana program and token mint registry
+      responses:
+        "200": {description: Helium program and mint registry}
+  /api/v1/integrations/helium/gateways:
+    get:
+      summary: List configured Helium multi-gateway gateways
+      security: [{bearerAuth: []}]
+      responses:
+        "200": {description: Gateway status list}
+        "503": {description: Helium multi-gateway integration not configured}
+  /api/v1/integrations/helium/gateways/{mac}:
+    get:
+      summary: Read one Helium gateway status
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: mac
+          required: true
+          schema: {type: string}
+      responses:
+        "200": {description: Gateway status}
+        "503": {description: Helium multi-gateway integration not configured}
+  /api/v1/integrations/helium/gateways/{mac}/packets:
+    get:
+      summary: Read recent Helium gateway packet metadata
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: mac
+          required: true
+          schema: {type: string}
+      responses:
+        "200": {description: Recent gateway packet metadata}
+        "503": {description: Helium multi-gateway integration not configured}
+  /api/v1/integrations/helium/entity/wallet/{wallet}:
+    get:
+      summary: Read Helium Entity API wallet information
+      security: [{bearerAuth: []}]
+      parameters:
+        - in: path
+          name: wallet
+          required: true
+          schema: {type: string}
+      responses:
+        "200": {description: Helium wallet/entity information}
 components:
   securitySchemes:
     bearerAuth:

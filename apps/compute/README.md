@@ -25,7 +25,7 @@ The service never receives the agent wallet private key. A compute API key autho
 
 ```bash
 cp apps/compute/.env.example apps/compute/.env
-pnpm dev:compute
+corepack pnpm dev:compute
 ```
 
 Default local port: `3200`.

@@ -23,7 +23,7 @@ npx @solana/pay@1.0.26 --sandbox curl https://debugger.pay.sh/mpp/quote/AAPL
 The repository provides the safer shortcut:
 
 ```bash
-pnpm pay:sandbox -- https://debugger.pay.sh/mpp/quote/AAPL
+corepack pnpm pay:sandbox -- https://debugger.pay.sh/mpp/quote/AAPL
 ```
 
 It always uses sandbox + non-interactive JSON-oriented mode.

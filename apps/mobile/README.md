@@ -21,7 +21,7 @@ The mobile app is an API client. It must not hold protocol-upgrade authority, tr
 
 ```bash
 cp apps/mobile/.env.example apps/mobile/.env
-pnpm dev:mobile
+corepack pnpm dev:mobile
 ```
 
 The app consumes shared design tokens from `@powerchain/design-system` and the canonical backend boundary through shared clients.

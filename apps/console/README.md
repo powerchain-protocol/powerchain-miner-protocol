@@ -65,8 +65,8 @@ From the repository root:
 ```bash
 corepack enable
 corepack prepare pnpm@11.23.0 --activate
-pnpm install
-pnpm dev:console
+corepack pnpm install
+corepack pnpm dev:console
 ```
 
 Console:
@@ -78,8 +78,8 @@ http://localhost:3000
 ## Build
 
 ```bash
-pnpm typecheck:console
-pnpm build:console
+corepack pnpm typecheck:console
+corepack pnpm build:console
 ```
 
 The Vercel configuration is intentionally scoped to the console workspace and never embeds

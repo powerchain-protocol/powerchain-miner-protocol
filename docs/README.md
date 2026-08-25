@@ -13,6 +13,11 @@ Canonical product version: `1.0.0`.
 
 ## Architecture and protocol
 
+- [Solana Program Registry](SOLANA-PROGRAMS.md)
+- [Community Energy DePIN](COMMUNITY-DEPIN.md)
+- [Helium Integration](HELIUM.md)
+- [CCT Carbon Credit Token](CCT.md)
+
 - [Renewable Miner Architecture](RENEWABLE-MINER-ARCHITECTURE.md)
 - [Miner Anchor Program](../programs/miner/README.md)
 - [Canonical Miner Protocol Package](../packages/powerchain-protocol/miner/README.md)

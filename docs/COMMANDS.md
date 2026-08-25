@@ -36,7 +36,7 @@ minerctl identity
 ## Evidence verifier
 
 ```bash
-pnpm verifier:keygen
+corepack pnpm verifier:keygen
 ```
 
 Generates an Ed25519 private/public PEM pair under ignored `target/keys/` paths by default.
@@ -46,11 +46,11 @@ Register only the public key with the control plane.
 ## Miner program administration
 
 ```bash
-pnpm miner:initialize -- <env-file>
-pnpm miner:register-owner -- <env-file>
-pnpm miner:register-device -- <env-file>
-pnpm miner:reassign-device -- <env-file>
-pnpm miner:inspect -- <env-file>
+corepack pnpm miner:initialize -- <env-file>
+corepack pnpm miner:register-owner -- <env-file>
+corepack pnpm miner:register-device -- <env-file>
+corepack pnpm miner:reassign-device -- <env-file>
+corepack pnpm miner:inspect -- <env-file>
 ```
 
 The file-keypair registration/reassignment commands are for controlled Devnet/bootstrap

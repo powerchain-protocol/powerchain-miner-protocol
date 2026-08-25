@@ -1060,3 +1060,89 @@ a { color: inherit; }
     display:none;
   }
 }
+
+
+.depin-heading {
+  margin-bottom: 34px;
+}
+
+.depin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.depin-card {
+  min-width: 0;
+  border: 1px solid var(--pc-border);
+  border-radius: 16px;
+  background: var(--pc-white);
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(8, 45, 28, .035);
+}
+
+.depin-card__icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--pc-border-strong);
+  border-radius: 12px;
+  background: var(--pc-green-50);
+  color: var(--pc-green-800);
+}
+
+.depin-card h3 {
+  margin: 20px 0 9px;
+  color: var(--pc-ink);
+  font-size: 17px;
+  letter-spacing: -.025em;
+}
+
+.depin-card p {
+  margin: 0;
+  color: var(--pc-ink-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.depin-boundary {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 18px;
+  border: 1px solid var(--pc-border);
+  border-radius: 14px;
+  background: var(--pc-white);
+  padding: 16px 18px;
+}
+
+.depin-boundary span {
+  color: var(--pc-green-700);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+.depin-boundary strong {
+  color: var(--pc-ink);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+@media (max-width: 980px) {
+  .depin-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .depin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .depin-boundary {
+    grid-template-columns: 1fr;
+  }
+}

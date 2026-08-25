@@ -20,6 +20,14 @@
     {
       "key": "claimId",
       "value": ""
+    },
+    {
+      "key": "heliumGatewayMac",
+      "value": "AABBCCDDEEFF0011"
+    },
+    {
+      "key": "heliumWallet",
+      "value": ""
     }
   ],
   "item": [
@@ -166,6 +174,112 @@
         },
         "url": "{{baseUrl}}/api/v1/internal/proofs/lease"
       }
+    },
+    {
+      "name": "Helium Integration",
+      "item": [
+        {
+          "name": "Helium Program Registry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/integrations/helium/programs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "integrations",
+                "helium",
+                "programs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Helium Gateways",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/integrations/helium/gateways",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "integrations",
+                "helium",
+                "gateways"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Helium Gateway",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/integrations/helium/gateways/{{heliumGatewayMac}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "integrations",
+                "helium",
+                "gateways",
+                "{{heliumGatewayMac}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Helium Wallet Entity",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/integrations/helium/entity/wallet/{{heliumWallet}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "integrations",
+                "helium",
+                "entity",
+                "wallet",
+                "{{heliumWallet}}"
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }
