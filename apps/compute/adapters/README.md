@@ -59,5 +59,5 @@ Local endpoint:
 http://127.0.0.1:3211
 ```
 
-This v1.3 adapter intentionally rejects streaming and advanced Anthropic tool/content block
+This v1.0.0 adapter intentionally rejects streaming and advanced Anthropic tool/content block
 semantics rather than silently translating them incorrectly.

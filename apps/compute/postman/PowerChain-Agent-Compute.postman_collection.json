@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "PowerChain Agent Compute API v1.3",
-    "_postman_id": "powerchain-agent-compute-v13",
+    "name": "PowerChain Agent Compute API v1.0.0",
+    "_postman_id": "powerchain-agent-compute-v100",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [

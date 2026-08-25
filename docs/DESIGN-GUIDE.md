@@ -1,6 +1,6 @@
 # PowerChain Renewable Miner OS — UI/UX Design Guide
 
-**Version:** 1.2  
+**Version:** 1.0.0  
 **Theme:** Light-first  
 **Brand palette:** White · Light gray · Dark green · Black/charcoal
 

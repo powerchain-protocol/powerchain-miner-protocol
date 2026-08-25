@@ -1,6 +1,6 @@
 # PowerChain Renewable Miner OS
 
-**Version:** 1.3.1  
+**Version:** 1.0.0  
 **Network:** Solana Devnet / Mainnet-Beta  
 **Reward asset:** PowerChain Miner (`MINER`) — Token-2022  
 **Node:** Raspberry Pi / Linux  
@@ -81,13 +81,13 @@ The control boundary is explicit:
 
 ### Release status
 
-`1.3.1` keeps the canonical v1 protocol, wallet-funded Agent Compute, live model discovery, and reusable Codex/Claude ACP setup while fixing pnpm/Docker development bootstrap reliability. It is **not** a claim that the
+`1.0.0` is the canonical PowerChain Renewable Miner OS + Agent Compute release. It is **not** a claim that the
 Anchor program has received an external security audit or that the supplied placeholder
 program ID is deployable. Before Mainnet-Beta, complete the release gates in
 `docs/MIGRATION-v1.0.md` and `docs/DEPLOYMENT.md`.
 
 
-## v1.1 product and UI architecture
+## Product and UI architecture
 
 The protocol remains v1. The product layer is now a clean monorepo:
 
@@ -115,7 +115,7 @@ See `docs/DESIGN-GUIDE.md`.
 
 
 
-## v1.2 Agent Compute
+## Agent Compute
 
 Agent Compute gives a PowerChain AgentOS agent one funded compute identity:
 
@@ -161,7 +161,7 @@ See [`docs/AGENT-COMPUTE.md`](docs/AGENT-COMPUTE.md).
 
 
 
-## v1.3 agent setup and model routing
+## Agent setup and model routing
 
 Model IDs are discovered from:
 
@@ -205,7 +205,7 @@ See:
 
 
 
-## v1.3.1 development reliability fixes
+## Canonical development reliability
 
 The local development path is now deterministic:
 
@@ -298,6 +298,43 @@ reward = effective_wh × MINER_base_units_per_Wh
 ```
 
 See [`docs/PROOF-OF-ENERGY.md`](docs/PROOF-OF-ENERGY.md).
+
+
+## Canonical release policy
+
+`1.0.0` is the only supported product version for this repository.
+
+The earlier `1.1.x`, `1.2.x`, and `1.3.x` labels were working iteration numbers used while
+the architecture was being hardened. Their functionality has been folded into this canonical
+`1.0.0` release and they are not treated as separate public product versions.
+
+Canonical product boundaries:
+
+```text
+apps/backend    authoritative Fastify/PostgreSQL control plane
+apps/console    authenticated operator console
+apps/compute    Agent Compute data plane
+apps/frontend   marketing website + PWA
+apps/mobile     Expo / React Native companion
+
+packages/agent-compute
+packages/api-client
+packages/design-system
+packages/miner-sdk
+
+programs/miner
+services/device-agent
+services/evidence-verifier
+services/verifier-worker
+```
+
+Canonical API boundaries:
+
+```text
+Control plane   /api/v1/*
+Compute         https://compute.powerchain.energy/v1/*
+```
+
 
 ## Repository
 
@@ -443,7 +480,7 @@ repository commits the review in `pnpm-workspace.yaml`:
 strictDepBuilds: true
 
 allowBuilds:
-  "esbuild@0.28.2": true
+  esbuild: true
   bigint-buffer: false
   bufferutil: false
   utf-8-validate: false
@@ -456,11 +493,11 @@ explicitly denied, using their JavaScript fallbacks.
 The repository also sets:
 
 ```yaml
-verifyDepsBeforeRun: warn
+verifyDepsBeforeRun: error
 ```
 
 so a later `pnpm run` will not silently trigger another full workspace install. If dependency
-state is stale, pnpm emits a warning and the developer can run `pnpm install` explicitly.
+state is stale, pnpm fails and tells you to run `pnpm install` explicitly.
 
 
 ## Quick start — Raspberry Pi/Linux

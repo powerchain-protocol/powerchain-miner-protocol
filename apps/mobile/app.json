@@ -2,7 +2,7 @@
   "expo": {
     "name": "PowerChain Renewable Miner",
     "slug": "powerchain-renewable-miner",
-    "version": "1.3.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "backgroundColor": "#F6F8F6",
