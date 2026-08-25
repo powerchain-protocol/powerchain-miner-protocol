@@ -11,29 +11,41 @@ const pkg = JSON.parse(
 );
 
 const modules = [
-  ["./api/v1", "src/api/v1/index.ts"],
-  ["./cors", "src/cors/index.ts"],
-  ["./core", "src/core/index.ts"],
-  ["./nodes", "src/nodes/index.ts"],
-  ["./depin", "src/depin/index.ts"],
-  ["./solana", "src/solana/index.ts"],
-  ["./helius", "src/helius/index.ts"],
-  ["./iot", "src/iot/index.ts"],
-  ["./iot/devices", "src/iot/devices/index.ts"],
-  ["./iot/hardwares", "src/iot/hardwares/index.ts"],
-  ["./iot/firmwares", "src/iot/firmwares/index.ts"],
-  ["./compute", "src/compute/index.ts"],
-  ["./ai", "src/ai/index.ts"],
-  ["./ai/llm", "src/ai/llm/index.ts"],
-  ["./ai/mpc", "src/ai/mpc/index.ts"],
-  ["./agents", "src/agents/index.ts"],
-  ["./skills", "src/skills/index.ts"],
+  ["./api/v1", "src/api/v1/index.ts", "dist/api/v1/index.js"],
+  ["./cors", "src/cors/index.ts", "dist/cors/index.js"],
+  ["./core", "src/core/index.ts", "dist/core/index.js"],
+  ["./nodes", "src/nodes/index.ts", "dist/nodes/index.js"],
+  ["./depin", "src/depin/index.ts", "dist/depin/index.js"],
+  ["./solana", "src/solana/index.ts", "dist/solana/index.js"],
+  ["./helius", "src/helius/index.ts", "dist/helius/index.js"],
+  ["./iot", "src/iot/index.ts", "dist/iot/index.js"],
+  ["./iot/devices", "src/iot/devices/index.ts", "dist/iot/devices/index.js"],
+  ["./iot/hardwares", "src/iot/hardwares/index.ts", "dist/iot/hardwares/index.js"],
+  ["./iot/firmwares", "src/iot/firmwares/index.ts", "dist/iot/firmwares/index.js"],
+  ["./compute", "src/compute/index.ts", "dist/compute/index.js"],
+  ["./ai", "src/ai/index.ts", "dist/ai/index.js"],
+  ["./ai/llm", "src/ai/llm/index.ts", "dist/ai/llm/index.js"],
+  ["./ai/mpc", "src/ai/mpc/index.ts", "dist/ai/mpc/index.js"],
+  ["./agents", "src/agents/index.ts", "dist/agents/index.js"],
+  ["./skills", "src/skills/index.ts", "dist/skills/index.js"],
+  ["./system", "src/system/index.ts", "dist/system/index.js"],
+  ["./epoch", "src/epoch/index.ts", "dist/epoch/index.js"],
+  ["./rules", "src/rules/index.ts", "dist/rules/index.js"],
+  ["./mining-engine", "src/mining-engine/index.ts", "dist/mining-engine/index.js"],
+  ["./pay", "src/pay/index.ts", "dist/pay/index.js"],
 ];
 
 test("canonical protocol package exposes all requested modules", async () => {
-  for (const [subpath, file] of modules) {
-    assert.equal(pkg.exports[subpath], `./${file}`);
-    await access(`${base}/${file}`);
+  for (const [subpath, sourceFile, distFile] of modules) {
+    assert.equal(
+      pkg.exports[subpath].import,
+      `./${distFile}`,
+    );
+    assert.equal(
+      pkg.exports[subpath].types,
+      `./${distFile.replace(/\.js$/, ".d.ts")}`,
+    );
+    await access(`${base}/${sourceFile}`);
   }
   await access(`${base}/skills/SKILLS.md`);
   await access(`${base}/CHARACTERS.md`);

@@ -43,3 +43,6 @@ Project-specific Showcase skills may live under:
 ```text
 showcase/<project-slug>/skills/<skill-name>/
 ```
+- [`MINER.md`](MINER.md) — Proof-of-Energy/mining engine rules.
+- [`REWARDS.md`](REWARDS.md) — reward, claim, and settlement rules.
+- [`PAY.SH.md`](PAY.SH.md) — Solana Pay and pay.sh sandbox/payment guidance.

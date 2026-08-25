@@ -151,8 +151,9 @@ Because the account is created with deterministic claim seeds, the same claim ID
 | `set_paused` | protocol authority | stop/resume proof and claim settlement |
 | `set_verifier` | protocol authority | rotate configured verifier signer |
 | `update_reward_policy` | protocol authority | update protocol reward/energy/emission ceilings |
+| `update_mining_rules` | protocol authority | update proof-age, observation-age, clock-skew, quality, energy and epoch mining rules |
 | `propose_authority` | current authority | begin two-step authority transfer |
-| `cancel_authority_transfer` | current authority | cancel an unaccepted pending authority transfer |
+| `cancel_authority_transfer` | current authority | clear an unaccepted pending authority transfer |
 | `accept_authority` | pending authority | complete authority transfer |
 
 ## Proof validation
@@ -231,7 +232,7 @@ High-consequence administration is intentionally explicit:
 - `set_paused` provides protocol emergency pause;
 - `set_verifier` rotates the trusted verifier signer;
 - `update_reward_policy` cannot lower the emission cap below already issued rewards;
-- authority rotation is two-step: `propose_authority` → `accept_authority`; the current authority can use `cancel_authority_transfer` before acceptance.
+- authority rotation is two-step: `propose_authority` → `accept_authority`.
 
 Production deployments should place protocol authority behind an organizational wallet/multisig and follow the backend approval/audit controls documented in the repository.
 
@@ -251,7 +252,6 @@ RewardPolicyUpdated
 VerifierUpdated
 PauseChanged
 AuthorityProposed
-AuthorityProposalCancelled
 AuthorityAccepted
 ```
 

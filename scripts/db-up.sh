@@ -27,7 +27,7 @@ if ! command -v docker >/dev/null 2>&1; then
 [db] Database setup skipped; the JavaScript workspace is still ready.
 [db]
 [db] To enable the database later:
-[db]   - install/start Docker Desktop, then run: pnpm db:up
+[db]   - install/start Docker Desktop, then run: corepack pnpm db:up
 [db]   - OR configure DATABASE_URL in apps/backend/.env
 EOF
     exit 3
@@ -39,7 +39,7 @@ Docker was not found and PostgreSQL is not reachable.
 macOS:
   1. Install Docker Desktop.
   2. Start Docker Desktop.
-  3. Re-run: pnpm db:up
+  3. Re-run: corepack pnpm db:up
 
 Alternative:
   Configure an existing PostgreSQL 17 database in apps/backend/.env:
@@ -51,7 +51,7 @@ fi
 if ! docker info >/dev/null 2>&1; then
   if [[ "$MODE" == "optional" ]]; then
     echo "[db] Docker is installed but its daemon is not running; database setup skipped." >&2
-    echo "[db] Start Docker Desktop, then run: pnpm db:up" >&2
+    echo "[db] Start Docker Desktop, then run: corepack pnpm db:up" >&2
     exit 3
   fi
   echo "Docker is installed but the daemon is not running. Start Docker Desktop." >&2

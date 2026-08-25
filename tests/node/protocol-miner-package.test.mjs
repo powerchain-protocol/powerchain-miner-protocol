@@ -36,7 +36,8 @@ const workspace = await readFile(
 test("canonical miner protocol package has the requested identity", () => {
   assert.equal(pkg.name, "@powerchain-protocol/miner");
   assert.equal(pkg.version, "1.0.0");
-  assert.equal(pkg.private, true);
+  assert.equal(pkg.private, false);
+  assert.equal(pkg.publishConfig.access, "public");
   assert.match(workspace, /packages\/\*\/\*/);
 });
 

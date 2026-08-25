@@ -1,36 +1,163 @@
 {
   "name": "@powerchain-protocol/miner",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./constants": "./src/constants.ts",
-    "./types": "./src/types.ts",
-    "./math": "./src/math.ts",
-    "./proofs": "./src/proofs.ts",
-    "./claims": "./src/claims.ts",
-    "./pdas": "./src/pdas.ts",
-    "./api/v1": "./src/api/v1/index.ts",
-    "./cors": "./src/cors/index.ts",
-    "./core": "./src/core/index.ts",
-    "./nodes": "./src/nodes/index.ts",
-    "./depin": "./src/depin/index.ts",
-    "./solana": "./src/solana/index.ts",
-    "./helius": "./src/helius/index.ts",
-    "./iot": "./src/iot/index.ts",
-    "./iot/devices": "./src/iot/devices/index.ts",
-    "./iot/hardwares": "./src/iot/hardwares/index.ts",
-    "./iot/firmwares": "./src/iot/firmwares/index.ts",
-    "./compute": "./src/compute/index.ts",
-    "./ai": "./src/ai/index.ts",
-    "./ai/llm": "./src/ai/llm/index.ts",
-    "./ai/mpc": "./src/ai/mpc/index.ts",
-    "./agents": "./src/agents/index.ts",
-    "./skills": "./src/skills/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "import": "./dist/constants.js",
+      "default": "./dist/constants.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js",
+      "default": "./dist/types.js"
+    },
+    "./math": {
+      "types": "./dist/math.d.ts",
+      "import": "./dist/math.js",
+      "default": "./dist/math.js"
+    },
+    "./proofs": {
+      "types": "./dist/proofs.d.ts",
+      "import": "./dist/proofs.js",
+      "default": "./dist/proofs.js"
+    },
+    "./claims": {
+      "types": "./dist/claims.d.ts",
+      "import": "./dist/claims.js",
+      "default": "./dist/claims.js"
+    },
+    "./pdas": {
+      "types": "./dist/pdas.d.ts",
+      "import": "./dist/pdas.js",
+      "default": "./dist/pdas.js"
+    },
+    "./api/v1": {
+      "types": "./dist/api/v1/index.d.ts",
+      "import": "./dist/api/v1/index.js",
+      "default": "./dist/api/v1/index.js"
+    },
+    "./cors": {
+      "types": "./dist/cors/index.d.ts",
+      "import": "./dist/cors/index.js",
+      "default": "./dist/cors/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js",
+      "default": "./dist/core/index.js"
+    },
+    "./nodes": {
+      "types": "./dist/nodes/index.d.ts",
+      "import": "./dist/nodes/index.js",
+      "default": "./dist/nodes/index.js"
+    },
+    "./depin": {
+      "types": "./dist/depin/index.d.ts",
+      "import": "./dist/depin/index.js",
+      "default": "./dist/depin/index.js"
+    },
+    "./solana": {
+      "types": "./dist/solana/index.d.ts",
+      "import": "./dist/solana/index.js",
+      "default": "./dist/solana/index.js"
+    },
+    "./helius": {
+      "types": "./dist/helius/index.d.ts",
+      "import": "./dist/helius/index.js",
+      "default": "./dist/helius/index.js"
+    },
+    "./iot": {
+      "types": "./dist/iot/index.d.ts",
+      "import": "./dist/iot/index.js",
+      "default": "./dist/iot/index.js"
+    },
+    "./iot/devices": {
+      "types": "./dist/iot/devices/index.d.ts",
+      "import": "./dist/iot/devices/index.js",
+      "default": "./dist/iot/devices/index.js"
+    },
+    "./iot/hardwares": {
+      "types": "./dist/iot/hardwares/index.d.ts",
+      "import": "./dist/iot/hardwares/index.js",
+      "default": "./dist/iot/hardwares/index.js"
+    },
+    "./iot/firmwares": {
+      "types": "./dist/iot/firmwares/index.d.ts",
+      "import": "./dist/iot/firmwares/index.js",
+      "default": "./dist/iot/firmwares/index.js"
+    },
+    "./compute": {
+      "types": "./dist/compute/index.d.ts",
+      "import": "./dist/compute/index.js",
+      "default": "./dist/compute/index.js"
+    },
+    "./ai": {
+      "types": "./dist/ai/index.d.ts",
+      "import": "./dist/ai/index.js",
+      "default": "./dist/ai/index.js"
+    },
+    "./ai/llm": {
+      "types": "./dist/ai/llm/index.d.ts",
+      "import": "./dist/ai/llm/index.js",
+      "default": "./dist/ai/llm/index.js"
+    },
+    "./ai/mpc": {
+      "types": "./dist/ai/mpc/index.d.ts",
+      "import": "./dist/ai/mpc/index.js",
+      "default": "./dist/ai/mpc/index.js"
+    },
+    "./agents": {
+      "types": "./dist/agents/index.d.ts",
+      "import": "./dist/agents/index.js",
+      "default": "./dist/agents/index.js"
+    },
+    "./skills": {
+      "types": "./dist/skills/index.d.ts",
+      "import": "./dist/skills/index.js",
+      "default": "./dist/skills/index.js"
+    },
+    "./system": {
+      "types": "./dist/system/index.d.ts",
+      "import": "./dist/system/index.js",
+      "default": "./dist/system/index.js"
+    },
+    "./epoch": {
+      "types": "./dist/epoch/index.d.ts",
+      "import": "./dist/epoch/index.js",
+      "default": "./dist/epoch/index.js"
+    },
+    "./rules": {
+      "types": "./dist/rules/index.d.ts",
+      "import": "./dist/rules/index.js",
+      "default": "./dist/rules/index.js"
+    },
+    "./mining-engine": {
+      "types": "./dist/mining-engine/index.d.ts",
+      "import": "./dist/mining-engine/index.js",
+      "default": "./dist/mining-engine/index.js"
+    },
+    "./pay": {
+      "types": "./dist/pay/index.d.ts",
+      "import": "./dist/pay/index.js",
+      "default": "./dist/pay/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm clean && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "pack:inspect": "npm pack --dry-run --json",
+    "prepack": "pnpm build",
+    "prepublishOnly": "pnpm typecheck && pnpm build"
   },
   "dependencies": {
     "@solana/web3.js": "1.98.4"
@@ -38,5 +165,38 @@
   "devDependencies": {
     "@types/node": "24.13.3",
     "typescript": "5.9.3"
+  },
+  "description": "Canonical PowerChain renewable Proof-of-Energy mining protocol contracts, reward math, epochs, rules, Solana PDAs, agent policy, and payment helpers.",
+  "keywords": [
+    "powerchain",
+    "solana",
+    "renewable-energy",
+    "proof-of-energy",
+    "depin",
+    "miner",
+    "token-2022",
+    "agents"
+  ],
+  "engines": {
+    "node": ">=24.19.0 <25"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "CHARACTERS.md",
+    "skills"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/powerchain-protocol/powerchain-miner-protocol.git",
+    "directory": "packages/powerchain-protocol/miner"
+  },
+  "homepage": "https://github.com/powerchain-protocol/powerchain-miner-protocol#readme",
+  "publishConfig": {
+    "access": "public"
   }
 }

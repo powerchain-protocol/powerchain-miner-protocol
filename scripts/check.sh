@@ -19,11 +19,20 @@ node scripts/check-openapi.mjs
 echo "[check] docs"
 node scripts/check-docs.mjs
 
+echo "[check] console architecture"
+node scripts/check-console-architecture.mjs
+
+echo "[check] repository organization"
+node scripts/check-repository-organization.mjs
+
 echo "[check] skills"
 node scripts/check-skills.mjs
 
 echo "[check] pnpm build policy"
 node scripts/check-pnpm-build-policy.mjs
+
+echo "[check] secrets"
+node scripts/check-secrets.mjs
 
 echo "[check] Miner program contract"
 node scripts/check-miner-program.mjs

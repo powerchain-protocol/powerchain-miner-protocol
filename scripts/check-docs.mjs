@@ -19,8 +19,17 @@ const documents = [
   "apps/compute/README.md",
   "apps/frontend/README.md",
   "apps/mobile/README.md",
+  "apps/console/ARCHITECTURE.md",
   "docker/README.md",
   "docs/README.md",
+  "docs/PROJECT-STRUCTURE.md",
+  "docs/history/README.md",
+  "skills/PAY.SH.md",
+  "skills/REWARDS.md",
+  "skills/MINER.md",
+  "docs/NPM-PUBLISHING.md",
+  "docs/KEY-MANAGEMENT.md",
+  "docs/MINING-ENGINE.md",
 ];
 
 const markdownLink = /\[[^\]]+\]\(([^)]+)\)/g;
@@ -85,6 +94,7 @@ const instructions = [
   "set_paused",
   "set_verifier",
   "update_reward_policy",
+  "update_mining_rules",
   "propose_authority",
   "cancel_authority_transfer",
   "accept_authority",

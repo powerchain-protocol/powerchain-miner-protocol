@@ -10,4 +10,9 @@ export type AppEventMap = {
   "proof:selected": { proofId: string };
   "modal:opened": { name: string };
   "modal:closed": { name: string };
+  "analytics:tracked": { name: string };
+  "ai:started": { task: string };
+  "ai:completed": { task: string; requiresReview: boolean };
+  "auth:login-succeeded": { returnTo: string };
+  "auth:login-failed": { reason: string };
 };

@@ -37,7 +37,7 @@ The Miner program currently contains a **placeholder Solana program ID**:
 11111111111111111111111111111111
 ```
 
-Do not treat this repository as Mainnet-Beta deployable until the program ID, deployment manifests, program authorities, Token-2022 mint, treasury, verifier identity, RPC configuration, and release gates have been synchronized and verified. See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) and [`docs/MIGRATION-v1.0.md`](docs/MIGRATION-v1.0.md).
+Do not treat this repository as Mainnet-Beta deployable until the program ID, deployment manifests, program authorities, Token-2022 mint, treasury, verifier identity, RPC configuration, and release gates have been synchronized and verified. See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) and [`docs/history/migrations/MIGRATION-v1.0.md`](docs/history/migrations/MIGRATION-v1.0.md).
 
 ---
 
@@ -140,7 +140,7 @@ AUDIT
 └── tests/                   Node, Python and integration fixtures
 ```
 
-For ownership and dependency direction, see [`docs/MONOREPO.md`](docs/MONOREPO.md).
+For ownership and dependency direction, see [`docs/MONOREPO.md`](docs/MONOREPO.md) and [`docs/PROJECT-STRUCTURE.md`](docs/PROJECT-STRUCTURE.md).
 
 ---
 
@@ -267,6 +267,33 @@ Security properties include:
 See [`docs/CLAIM-SETTLEMENT-v1.md`](docs/CLAIM-SETTLEMENT-v1.md) and [`docs/CLAIM-APPROVALS.md`](docs/CLAIM-APPROVALS.md).
 
 ---
+
+
+### Mining engine and epochs
+
+Canonical `@powerchain-protocol/miner` now composes:
+
+```text
+system → proof rules → epoch → reward engine → settlement
+```
+
+Epoch identity is deterministic from physical observation time; delayed settlement does not
+change the proof's protocol epoch.
+
+See [Mining Engine](docs/MINING-ENGINE.md), [MINER skill](skills/MINER.md), and
+[Rewards skill](skills/REWARDS.md).
+
+### Payments
+
+Solana Pay transfer-request helpers live in `@powerchain-protocol/miner/pay`. Agent-paid HTTP
+flows use the separately pinned pay.sh CLI in sandbox-first mode.
+
+```bash
+pnpm pay:version
+pnpm pay:sandbox -- https://debugger.pay.sh/mpp/quote/AAPL
+```
+
+See [PAY.SH skill](skills/PAY.SH.md) and [Key Management](docs/KEY-MANAGEMENT.md).
 
 ## Agent Compute
 
@@ -592,3 +619,7 @@ Read [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`CONTRIBUTORS.md`](CONTRIBUTORS.m
 5. **Autonomy is bounded.** Agents can prepare and execute only within explicit policy and wallet authorization boundaries.
 6. **Canonical contracts are shared.** Protocol constants and math belong in `@powerchain-protocol/miner`, not duplicated across apps.
 7. **Fail closed.** Missing deployment configuration, unknown model routes, unreviewed build scripts, or unverifiable settlement should stop the workflow rather than silently degrade.
+
+### Package publishing
+
+See [npm Publishing](docs/NPM-PUBLISHING.md) for the token-free trusted-publishing path for `@powerchain-protocol/miner`.

@@ -56,6 +56,27 @@ The console is for:
 
 It talks to `apps/backend` through its BFF/server boundary.
 
+
+#### Console internal dependency rule
+
+The console keeps reusable logic under domain/runtime boundaries:
+
+```text
+lib/core/         universal helpers
+lib/chains/       Solana/Sui logic
+lib/wallets/      browser wallet discovery
+lib/market-data/  server-only provider integrations
+lib/client/       browser-safe exports
+lib/server/       BFF/server-only exports
+```
+
+New code must use canonical domain imports. Legacy flat files are compatibility facades only.
+
+```bash
+corepack pnpm console:architecture
+```
+
+
 ### `apps/frontend`
 
 Public website.

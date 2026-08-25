@@ -1,0 +1,4 @@
+registry=https://registry.npmjs.org/
+access=public
+# Authentication is intentionally omitted.
+# Prefer npm Trusted Publishing (OIDC) for CI releases.

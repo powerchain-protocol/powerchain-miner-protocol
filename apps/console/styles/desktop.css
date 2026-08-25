@@ -529,3 +529,40 @@
   .login-principles { display: none; }
   .login-form-panel { min-height: calc(100vh - 96px); padding: 18px; }
 }
+
+
+.common-alert-list {
+  display: grid;
+  gap: 8px;
+}
+
+.common-alert-list article,
+.common-information {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--pc-border);
+  border-radius: 10px;
+  background: var(--pc-canvas);
+  padding: 12px;
+}
+
+.common-alert-list article[data-severity="critical"] {
+  border-color: var(--pc-ink-muted);
+  background: var(--pc-strong);
+}
+
+.common-alert-list article strong,
+.common-alert-list article small,
+.common-information strong,
+.common-information div {
+  display: block;
+}
+
+.common-alert-list article small,
+.common-information div {
+  margin-top: 3px;
+  color: var(--pc-ink-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}

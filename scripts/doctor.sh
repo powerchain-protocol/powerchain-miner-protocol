@@ -41,15 +41,22 @@ else
   fail "Corepack is required"
 fi
 
-if command -v pnpm >/dev/null 2>&1; then
-  PNPM_VERSION="$(pnpm --version 2>/dev/null || true)"
-  if [[ "$PNPM_VERSION" == "11.23.0" ]]; then
-    ok "pnpm $PNPM_VERSION"
+if command -v corepack >/dev/null 2>&1; then
+  COREPACK_PNPM="$(corepack pnpm --version 2>/dev/null || true)"
+  if [[ "$COREPACK_PNPM" == "11.23.0" ]]; then
+    ok "Corepack pnpm $COREPACK_PNPM"
   else
-    warn "pnpm ${PNPM_VERSION:-unknown}; packageManager pins 11.23.0"
+    fail "Corepack resolves pnpm ${COREPACK_PNPM:-unknown}; expected 11.23.0"
+  fi
+fi
+
+if command -v pnpm >/dev/null 2>&1; then
+  SHELL_PNPM="$(pnpm --version 2>/dev/null || true)"
+  if [[ "$SHELL_PNPM" != "11.23.0" ]]; then
+    warn "shell pnpm resolves to ${SHELL_PNPM:-unknown}; repository commands use Corepack pnpm 11.23.0"
   fi
 else
-  warn "pnpm shim is not active yet; run corepack enable"
+  warn "pnpm shell shim is not active; use corepack pnpm"
 fi
 
 if [[ -f pnpm-lock.yaml ]]; then

@@ -28,8 +28,6 @@ Canonical product version: `1.0.0`.
 - [Evidence Verification](EVIDENCE-VERIFICATION.md)
 - [Signed Attestation & Quorum](ATTESTATION-QUORUM.md)
 - [Settlement Verification](SETTLEMENT-VERIFICATION.md)
-- [Proof Settlement Leases & Durable Intents](SETTLEMENT-LEASES.md)
-- [Reward Claim Approval Policy](CLAIM-APPROVALS.md)
 - [Financial Idempotency](FINANCIAL-IDEMPOTENCY.md)
 - [Tamper-Evident Audit Integrity](AUDIT-INTEGRITY.md)
 - [Meter / EMS Source Rotation](SOURCE-ROTATION.md)
@@ -44,6 +42,7 @@ Canonical product version: `1.0.0`.
 ## Applications and design
 
 - [Monorepo](MONOREPO.md)
+- [Project Structure](PROJECT-STRUCTURE.md)
 - [Design Guide](DESIGN-GUIDE.md)
 - [Docker](../docker/README.md)
 - [Integrations & EMS](INTEGRATIONS.md)
@@ -61,17 +60,16 @@ Canonical product version: `1.0.0`.
 - [Canonical v1.0.0 Release Notes](RELEASE-NOTES-v1.0.0.md)
 - [Changelog](../CHANGELOG.md)
 
-## Migration history
+## History
 
-Migration documents are retained as internal schema/protocol evolution history. They do not change the public product version.
+Historical implementation documents are grouped separately so the main documentation
+index stays focused on the current canonical system:
 
-- [v0.4](MIGRATION-v0.4.md)
-- [v0.5](MIGRATION-v0.5.md)
-- [v0.6](MIGRATION-v0.6.md)
-- [v0.7](MIGRATION-v0.7.md)
-- [v0.8](MIGRATION-v0.8.md)
-- [v0.9](MIGRATION-v0.9.md)
-- [v1.0](MIGRATION-v1.0.md)
+- [Documentation History](history/README.md)
+- [Migration history](history/migrations/)
+- [Superseded working iteration notes](history/working-iterations/)
+
+These documents do not change the public `1.0.0` product version.
 
 ## Network isolation rule
 

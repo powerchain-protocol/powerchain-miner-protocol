@@ -12,7 +12,8 @@
     "register-owner": "tsx scripts/register-miner.ts",
     "register-device": "tsx scripts/register-device.ts",
     "inspect": "tsx scripts/inspect.ts",
-    "reassign-device": "tsx scripts/reassign-device.ts"
+    "reassign-device": "tsx scripts/reassign-device.ts",
+    "update-mining-rules": "tsx scripts/update-mining-rules.ts"
   },
   "dependencies": {
     "@anchor-lang/core": "1.1.2",

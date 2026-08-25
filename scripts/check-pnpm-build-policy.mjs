@@ -49,6 +49,13 @@ for (const legacy of [
   }
 }
 
+if (!/minimumReleaseAge:\s*1440/.test(source)) {
+  throw new Error("pnpm-workspace.yaml must keep a 24h minimum release age");
+}
+if (!/minimumReleaseAgeStrict:\s*true/.test(source)) {
+  throw new Error("pnpm-workspace.yaml must keep minimumReleaseAgeStrict: true");
+}
+
 console.log(
-  "pnpm build policy: reviewed dependencies are explicit",
+  "pnpm build/release-age policy: reviewed dependencies are explicit",
 );

@@ -13,11 +13,11 @@ for arg in "$@"; do
     --skip-db) SKIP_DB=1 ;;
     -h|--help)
       cat <<'EOF'
-Usage: pnpm bootstrap -- [--require-db|--skip-db]
+Usage: corepack pnpm bootstrap -- [--require-db|--skip-db]
 
 Default behavior:
-  install the workspace and configure env files; initialize PostgreSQL only
-  when a database is already reachable or Docker is available.
+  install/build the workspace and initialize PostgreSQL only when a database
+  is reachable or Docker is available.
 
 Options:
   --require-db   database startup/migrations are mandatory; fail if unavailable
@@ -31,6 +31,8 @@ done
 
 ./scripts/ensure-pnpm.sh
 PNPM=(corepack pnpm)
+
+echo "[pnpm] canonical $(${PNPM[@]} --version)"
 
 if [[ ! -f apps/backend/.env ]]; then
   cp apps/backend/.env.example apps/backend/.env
@@ -53,6 +55,7 @@ if [[ ! -f apps/mobile/.env && -f apps/mobile/.env.example ]]; then
 fi
 
 node scripts/check-pnpm-build-policy.mjs
+node scripts/check-secrets.mjs
 
 if [[ -f pnpm-lock.yaml ]]; then
   echo "[deps] installing from committed lockfile"
@@ -64,6 +67,9 @@ else
   echo "[deps] IMPORTANT: commit pnpm-lock.yaml after this successful install."
 fi
 
+echo "[build] @powerchain-protocol/miner"
+"${PNPM[@]}" --filter @powerchain-protocol/miner build
+
 DB_READY=0
 if [[ "$SKIP_DB" == "0" ]]; then
   if [[ "$REQUIRE_DB" == "1" ]]; then
@@ -74,13 +80,12 @@ if [[ "$SKIP_DB" == "0" ]]; then
     ./scripts/db-up.sh --optional
     DB_STATUS=$?
     set -e
-    if [[ "$DB_STATUS" == "0" ]]; then
-      DB_READY=1
-    elif [[ "$DB_STATUS" == "3" ]]; then
-      DB_READY=0
-    else
-      exit "$DB_STATUS"
-    fi
+
+    case "$DB_STATUS" in
+      0) DB_READY=1 ;;
+      3) DB_READY=0 ;;
+      *) exit "$DB_STATUS" ;;
+    esac
   fi
 fi
 
@@ -96,12 +101,12 @@ echo
 echo "Development bootstrap complete."
 if [[ "$DB_READY" == "0" ]]; then
   echo "Status: WORKSPACE_READY / DATABASE_NOT_STARTED"
-  echo "Backend routes that require PostgreSQL will remain unavailable until: pnpm db:up"
+  echo "Database later: corepack pnpm db:up"
 else
   echo "Status: WORKSPACE_READY / DATABASE_READY"
 fi
 
 echo
 echo "Run:"
-echo "  pnpm dev:apps"
-echo "  pnpm dev:mobile"
+echo "  corepack pnpm dev:apps"
+echo "  corepack pnpm dev:mobile"

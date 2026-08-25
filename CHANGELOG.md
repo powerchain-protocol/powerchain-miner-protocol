@@ -5,6 +5,18 @@ All notable changes to PowerChain Renewable Miner OS are documented here.
 The project uses **canonical public version `1.0.0`**. Earlier `1.1.x`, `1.2.x`, and `1.3.x` labels used during repository construction were working iteration labels, not supported public releases; their completed functionality is consolidated into `1.0.0`.
 
 The format follows the principles of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning for the public product contract.
+## [Unreleased]
+
+
+### Organized — application architecture
+
+- reorganized console libraries into `lib/core`, `lib/chains`, `lib/wallets`, and server-only `lib/market-data` domains;
+- added explicit `lib/client` and `lib/server` runtime barrels to keep browser code away from server credentials;
+- added stable `components`, `data`, `types`, `utils`, and UI barrel exports;
+- retained earlier flat and misspelled paths only as documented compatibility facades;
+- added `console:architecture` enforcement that rejects new imports from deprecated facades and server-only imports from client modules;
+- moved migration notes and superseded working release notes under `docs/history/`;
+- added `docs/PROJECT-STRUCTURE.md` and `repo:organization` to keep code ownership and documentation layout deterministic.
 
 ### Desktop UI architecture
 
@@ -15,8 +27,6 @@ The format follows the principles of [Keep a Changelog](https://keepachangelog.c
 - Replaced console shell with responsive reusable desktop navigation/header components.
 - Replaced Dashboard hand-rolled modals with Radix-backed modal components.
 - Added typed Next.js routes, stricter security headers, Vercel monorepo config, and hardened `proxy.ts`.
-
-## [Unreleased]
 
 ### Improved
 

@@ -1,45 +1,34 @@
 # @powerchain-protocol/miner
 
-**Version:** `1.0.0`  
-**Role:** canonical TypeScript protocol contract
+Canonical `1.0.0` TypeScript protocol contract for the PowerChain Renewable Miner program.
 
-`@powerchain-protocol/miner` is the shared protocol layer between the Anchor program, backend, SDKs, device/agent integrations, and application clients. It contains deterministic types, validation, math, identities, and protocol metadata—not privileged administration workflows.
+This package contains **protocol primitives**, not administration workflows.
 
-## Core ownership
+## Owns
 
-- canonical PDA seeds and derivation helpers;
+- canonical PDA seeds;
 - Token-2022 program identity;
-- account/state version constants;
+- account/state schema version constants;
 - Proof-of-Energy public types;
 - deterministic integer reward math;
-- claim-ID encoding and authorization bounds;
-- protocol API namespace metadata;
-- CORS/core/node/DePIN/Solana/Helius/IoT contracts;
-- compute and AI/LLM/MPC protocol primitives;
-- agent character and skill manifests.
+- protocol reward-ceiling checks;
+- proof-bound validation helpers;
+- digest/claim-id conversion helpers;
+- claim authorization bounds;
+- Miner/Device/ClaimReceipt PDA derivation.
 
-## Module map
+## Does not own
 
-```text
-@powerchain-protocol/miner
-├── /api/v1
-├── /cors
-├── /core
-├── /nodes
-├── /depin
-├── /solana
-├── /helius
-├── /iot/devices
-├── /iot/hardwares
-├── /iot/firmwares
-├── /compute
-├── /ai/llm
-├── /ai/mpc
-├── /agents
-└── /skills
-```
+- RPC provider configuration;
+- authority keypair loading;
+- Anchor administrative commands;
+- backend policy/RBAC;
+- physical evidence attestation;
+- wallet signing.
 
-## Example
+Those remain in `@powerchain/miner-sdk`, the backend, and the AgentOS execution layers.
+
+## Usage
 
 ```ts
 import {
@@ -50,37 +39,29 @@ import {
 } from "@powerchain-protocol/miner";
 ```
 
-```ts
-import {
-  API_V1_PREFIX,
-} from "@powerchain-protocol/miner/api/v1";
+### Reward ceiling
 
-import {
-  resolveLlmModel,
-} from "@powerchain-protocol/miner/ai/llm";
+```ts
+const ceiling = calculateProtocolRewardCeiling({
+  energyWh: 1_000n,
+  qualityBps: 9_500,
+  rewardPerWorkUnit: 100n,
+  maxRewardPerProof: 100_000n,
+});
+
+// 95_000n
 ```
 
-## Boundary
+## Canonical boundary
 
 ```text
-programs/miner                 deterministic on-chain settlement
+programs/miner                 on-chain authority
         ↑
-@powerchain-protocol/miner     canonical shared contracts
+@powerchain-protocol/miner     shared protocol contract
         ↑
-@powerchain/miner-sdk          administrative RPC/Anchor workflows
-apps/backend                   RBAC, evidence, economics, reconciliation
-apps/console/mobile            operator/user surfaces
+@powerchain/miner-sdk          administrative Anchor/RPC SDK
+apps/backend                   policy, evidence, rewards, claims
+apps/console/mobile            user/operator surfaces
 ```
 
-This package does **not** own private keys, authority keypair loading, raw physical evidence attestation, tenant RBAC, wallet signing, or provider billing credentials.
-
-## AI/MPC boundary
-
-`ai/mpc` means **Model Predictive Control**. It produces bounded plans/intents only; it does not directly actuate physical equipment. Execution remains subject to evidence, policy, approval, and authorized control-plane/device pathways.
-
-## Canonical reference
-
-On-chain instruction/account details: [`../../../programs/miner/README.md`](../../../programs/miner/README.md).
-
-Agent characters and authority rules: [`CHARACTERS.md`](CHARACTERS.md).  
-Skill registry: [`skills/SKILLS.md`](skills/SKILLS.md).
+All public package metadata remains canonical `1.0.0`.

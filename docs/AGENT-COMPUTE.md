@@ -305,7 +305,7 @@ RELEASED
 
 ## 7. Streaming policy
 
-Canonical v1.0.0 intentionally rejects streaming requests.
+v1.2 intentionally rejects streaming requests.
 
 Reason:
 
@@ -427,7 +427,7 @@ The transaction signature is unique per top-up intent.
 
 The database and policy model reserve `sui` as a preferred funding chain.
 
-Canonical v1.0.0 does **not** implement Sui payment verification.
+v1.2 does **not** implement Sui payment verification.
 
 A Sui top-up confirmation fails explicitly rather than marking unverified wallet funding as
 credit.
@@ -488,7 +488,7 @@ Codex/OpenAI-style clients can use the localhost OpenAI-compatible proxy.
 The Claude Code adapter converts basic Anthropic text-message requests to Agent Compute Chat
 Completions.
 
-Advanced streaming/tool-block translation is intentionally not faked in canonical v1.0.0.
+Advanced streaming/tool-block translation is intentionally not faked in v1.2.
 
 ---
 
