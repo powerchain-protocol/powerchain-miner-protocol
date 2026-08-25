@@ -60,7 +60,6 @@ Reviewed policy:
 ```yaml
 allowBuilds:
   esbuild: true
-  bigint-buffer: false
   bufferutil: false
   utf-8-validate: false
 ```

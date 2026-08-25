@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "Raspberry Pi renewable-energy proof agent for PowerChain Miner OS"
 requires-python = ">=3.11"
 dependencies = [
-  "cryptography>=44,<47",
+  "cryptography==50.0.0",
   "pymodbus>=3.9,<4"
 ]
 

@@ -7,7 +7,6 @@ const source = await readFile(
 
 const expected = new Map([
   ["esbuild", "true"],
-  ["bigint-buffer", "false"],
   ["bufferutil", "false"],
   ["utf-8-validate", "false"],
 ]);
@@ -54,6 +53,12 @@ if (!/minimumReleaseAge:\s*1440/.test(source)) {
 }
 if (!/minimumReleaseAgeStrict:\s*true/.test(source)) {
   throw new Error("pnpm-workspace.yaml must keep minimumReleaseAgeStrict: true");
+}
+
+if (/^\s*bigint-buffer:/m.test(source)) {
+  throw new Error(
+    "bigint-buffer must not be present in allowBuilds; the package is prohibited by the dependency security gate.",
+  );
 }
 
 console.log(

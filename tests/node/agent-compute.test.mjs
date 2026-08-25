@@ -70,8 +70,8 @@ test("Solana top-up helper sends exact quoted token amount", () => {
   assert.match(solana, /createTransferCheckedInstruction/);
   assert.match(solana, /requiredAssetBaseUnits/);
   assert.match(solana, /treasuryDestination/);
-  assert.match(solana, /TOKEN_2022_PROGRAM_ID/);
-  assert.match(solana, /TOKEN_PROGRAM_ID/);
+  assert.match(solana, /TOKEN_2022_PROGRAM_PUBLIC_KEY/);
+  assert.match(solana, /SPL_TOKEN_PROGRAM_PUBLIC_KEY/);
 });
 
 

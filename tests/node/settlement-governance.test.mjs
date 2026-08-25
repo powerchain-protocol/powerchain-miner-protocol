@@ -76,6 +76,6 @@ test("chain health validates deployment rather than only env syntax", () => {
   assert.match(chainHealth, /programExecutable/);
   assert.match(chainHealth, /stateVersionV1/);
   assert.match(chainHealth, /treasuryAuthorityMatches/);
-  assert.match(chainHealth, /TOKEN_2022_PROGRAM_ID/);
+  assert.match(chainHealth, /TOKEN_2022_PROGRAM_PUBLIC_KEY/);
   assert.match(server, /health\/chain/);
 });

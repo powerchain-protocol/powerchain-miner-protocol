@@ -12,9 +12,8 @@ allowBuilds:
   # Required by tsx/Next/Expo tooling.
   esbuild: true
 
-  # Optional native acceleration paths. The JavaScript fallbacks are sufficient
-  # for this monorepo, so do not execute their install/build scripts.
-  bigint-buffer: false
+  # Optional native acceleration paths. JavaScript fallbacks are sufficient.
+  # bigint-buffer is intentionally absent: CVE-2025-3194 has no patched release.
   bufferutil: false
   utf-8-validate: false
 

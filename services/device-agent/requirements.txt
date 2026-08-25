@@ -1,2 +1,2 @@
-cryptography>=44,<47
+cryptography==50.0.0
 pymodbus>=3.9,<4

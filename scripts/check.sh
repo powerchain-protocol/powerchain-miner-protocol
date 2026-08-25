@@ -61,3 +61,6 @@ echo "[check] Solana integrations"
 node scripts/check-solana-integrations.mjs
 
 echo "[check] OK"
+
+echo "[check] dependency security"
+node scripts/check-dependency-security.mjs

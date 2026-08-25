@@ -26,7 +26,7 @@ const computeUpstream = await readFile(
 test("pnpm build scripts are reviewed explicitly", () => {
   assert.match(workspace, /strictDepBuilds:\s*true/);
   assert.match(workspace, /["\']?esbuild["\']?:\s*true/);
-  assert.match(workspace, /bigint-buffer:\s*false/);
+  assert.doesNotMatch(workspace, /^\s*bigint-buffer:/m);
   assert.match(workspace, /bufferutil:\s*false/);
   assert.match(workspace, /utf-8-validate:\s*false/);
 });

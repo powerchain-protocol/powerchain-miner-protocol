@@ -7,6 +7,14 @@ The project uses **canonical public version `1.0.0`**. Earlier `1.1.x`, `1.2.x`,
 The format follows the principles of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning for the public product contract.
 ## [Unreleased]
 
+### Security — dependency advisories
+
+- pinned Python `cryptography` to `50.0.0`, covering the current PKCS#7, X.509 verifier, and bundled-OpenSSL advisories;
+- added pnpm overrides that move vulnerable transitive `uuid` 7/8/10/early-11 requests to patched `11.1.1` and redirect exact vulnerable 12.0.0/13.0.0 releases to patched versions;
+- removed JavaScript `@solana/spl-token` usage from the workspace because its archived `@solana/buffer-layout-utils` dependency pulls unpatched `bigint-buffer@1.1.5`;
+- added canonical SPL/Token-2022 associated-account, mint/account decoding, and TransferChecked instruction helpers under `@powerchain-protocol/miner/solana`;
+- added `deps:security` and `deps:refresh-lockfile` release gates.
+
 
 ### Added — Solana ecosystem, Helium and CCT
 

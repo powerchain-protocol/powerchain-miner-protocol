@@ -10,8 +10,8 @@ import {
 } from "@solana/web3.js";
 import {
   createAssociatedTokenAccountIdempotentInstruction,
-  TOKEN_2022_PROGRAM_ID,
-} from "@solana/spl-token";
+  TOKEN_2022_PROGRAM_PUBLIC_KEY,
+} from "@powerchain-protocol/miner/solana";
 
 type Prepared = {
   claimId: string;
@@ -138,13 +138,13 @@ export function ClaimWalletExecution({
 
       if (!prepared.destinationTokenAccountExists) {
         transaction.add(
-          createAssociatedTokenAccountIdempotentInstruction(
-            publicKey,
-            new PublicKey(prepared.accounts.destination),
-            publicKey,
-            new PublicKey(prepared.accounts.minerMint),
-            TOKEN_2022_PROGRAM_ID,
-          ),
+          createAssociatedTokenAccountIdempotentInstruction({
+            payer: publicKey,
+            associatedToken: new PublicKey(prepared.accounts.destination),
+            owner: publicKey,
+            mint: new PublicKey(prepared.accounts.minerMint),
+            tokenProgram: TOKEN_2022_PROGRAM_PUBLIC_KEY,
+          }),
         );
       }
 

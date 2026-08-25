@@ -47,7 +47,7 @@ methods it supports.
 | Package | Canonical version |
 |---|---:|
 | @solana/web3.js | `1.98.4` |
-| @solana/spl-token | `0.4.15` |
+| @powerchain-protocol/miner token client | canonical SPL/Token-2022 wire helpers; no legacy `@solana/spl-token` npm dependency |
 | @anchor-lang/core | `1.1.2` |
 
 The repository intentionally stays on the maintained `@solana/web3.js` 1.x line because the

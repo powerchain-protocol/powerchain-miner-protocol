@@ -695,6 +695,31 @@ Security documentation: [`docs/SECURITY.md`](docs/SECURITY.md).
 
 ---
 
+
+## Dependency security baseline
+
+Current dependency policy removes the August 2026 Dependabot roots rather than suppressing them:
+
+```text
+cryptography          50.0.0
+uuid compatibility   >= patched 11.1.1 line via pnpm overrides
+bigint-buffer         prohibited from the resolved graph
+@solana/spl-token     removed from JavaScript workspace dependencies
+```
+
+PowerChain uses a small audited SPL/Token-2022 client surface in `@powerchain-protocol/miner/solana` for ATA derivation, base Mint/Account decoding and `TransferChecked` / idempotent ATA instructions. The on-chain SPL Token and Token-2022 programs are unchanged.
+
+After updating an existing checkout, regenerate and commit the lockfile:
+
+```bash
+corepack pnpm deps:refresh-lockfile
+corepack pnpm deps:security
+```
+
+See [`docs/DEPENDENCY-SECURITY.md`](docs/DEPENDENCY-SECURITY.md).
+
+---
+
 ## Documentation
 
 Start with [`docs/README.md`](docs/README.md).

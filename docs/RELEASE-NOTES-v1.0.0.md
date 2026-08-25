@@ -93,7 +93,6 @@ strictDepBuilds: true
 
 allowBuilds:
   esbuild: true
-  bigint-buffer: false
   bufferutil: false
   utf-8-validate: false
 

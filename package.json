@@ -117,6 +117,15 @@
     "program:miner:sync-id": "./scripts/sync-program-id.sh",
     "program:cct:sync-id": "./scripts/sync-cct-program-id.sh",
     "build:cct": "corepack pnpm --filter @powerchain-protocol/cct build",
-    "pack:cct": "corepack pnpm --filter @powerchain-protocol/cct pack:inspect"
+    "pack:cct": "corepack pnpm --filter @powerchain-protocol/cct pack:inspect",
+    "deps:security": "node scripts/check-dependency-security.mjs",
+    "deps:refresh-lockfile": "corepack pnpm install --lockfile-only --no-frozen-lockfile && node scripts/check-dependency-security.mjs"
+  },
+  "pnpm": {
+    "overrides": {
+      "uuid@<11.1.1": "11.1.1",
+      "uuid@12.0.0": "12.0.1",
+      "uuid@13.0.0": "13.0.1"
+    }
   }
 }

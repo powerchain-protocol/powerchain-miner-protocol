@@ -21,8 +21,8 @@ corepack pnpm bootstrap:db
 ## `ERR_PNPM_IGNORED_BUILDS`
 
 The workspace uses strict dependency build review. The committed policy intentionally allows
-`esbuild` and denies the optional native acceleration scripts from `bigint-buffer`,
-`bufferutil`, and `utf-8-validate`.
+`esbuild` and denies optional native acceleration scripts from `bufferutil` and
+`utf-8-validate`. `bigint-buffer` is prohibited entirely because CVE-2025-3194 has no patched release.
 
 Verify the repository policy:
 
