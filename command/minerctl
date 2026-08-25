@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SERVICE="${POWERCHAIN_MINER_SERVICE:-powerchain-miner.service}"
+CONFIG="${POWERCHAIN_MINER_CONFIG:-/etc/powerchain-miner/config.toml}"
+DATA="${POWERCHAIN_MINER_DATA_DIR:-/var/lib/powerchain-miner}"
+API_URL="${POWERCHAIN_MINER_API_URL:-}"
+
+usage() {
+  cat <<'EOF'
+minerctl <command>
+
+Commands:
+  status       Show systemd service status
+  health       Run local health check
+  logs         Follow node logs
+  restart      Restart the miner service
+  start        Start the miner service
+  stop         Stop the miner service
+  config       Print active config path and permissions
+  identity     Show public identity fingerprint when available
+  identity-raw Show canonical raw Ed25519 public key (base64)
+  identity-solana Show the same device identity as a Solana base58 public key
+  source-hash  Show source identity hash for the active meter/EMS config
+  queue        Show queued proof count
+  queue-dead   Show chain-blocking dead-letter proofs
+  queue-retry  Retry all dead-letter proofs after operator correction
+  state        Print local runtime state
+  api-health   Query the configured Miner API health endpoint
+  diagnostics  Print a redacted support bundle
+  update-check Check signed release metadata
+EOF
+}
+
+case "${1:-}" in
+  status) systemctl status "$SERVICE" --no-pager ;;
+  health) /usr/local/lib/powerchain-miner/healthcheck ;;
+  logs) journalctl -u "$SERVICE" -f ;;
+  restart) systemctl restart "$SERVICE" ;;
+  start) systemctl start "$SERVICE" ;;
+  stop) systemctl stop "$SERVICE" ;;
+  config)
+    ls -l "$CONFIG"
+    echo "$CONFIG"
+    ;;
+  identity)
+    KEY="$DATA/device-ed25519.pem"
+    if [[ ! -r "$KEY" ]]; then
+      echo "identity not created yet"
+      exit 1
+    fi
+    openssl pkey -in "$KEY" -pubout 2>/dev/null | sha256sum | awk '{print $1}'
+    ;;
+  identity-raw)
+    KEY="$DATA/device-ed25519.pem"
+    [[ -r "$KEY" ]] || { echo "identity not created yet" >&2; exit 1; }
+    /opt/powerchain-miner/venv/bin/powerchain-miner-inspect identity-raw --key "$KEY"
+    ;;
+  identity-solana)
+    KEY="$DATA/device-ed25519.pem"
+    [[ -r "$KEY" ]] || { echo "identity not created yet" >&2; exit 1; }
+    /opt/powerchain-miner/venv/bin/powerchain-miner-inspect identity-solana --key "$KEY"
+    ;;
+  source-hash)
+    [[ -r "$CONFIG" ]] || { echo "config not found: $CONFIG" >&2; exit 1; }
+    /opt/powerchain-miner/venv/bin/powerchain-miner-inspect source-hash --config "$CONFIG"
+    ;;
+  queue)
+    DB="$DATA/queue.sqlite3"
+    [[ -r "$DB" ]] || { echo 0; exit 0; }
+    sqlite3 -header -column "$DB"       "select status,count(*) as count from proof_queue group by status order by status;"
+    ;;
+  queue-dead)
+    DB="$DATA/queue.sqlite3"
+    [[ -r "$DB" ]] || { echo "queue database not found"; exit 0; }
+    sqlite3 -header -column "$DB"       "select id,json_extract(payload,'$.sequence') as sequence,last_http_status,last_error_code,last_error from proof_queue where status='DEAD' order by id;"
+    ;;
+  queue-retry)
+    DB="$DATA/queue.sqlite3"
+    [[ -r "$DB" ]] || { echo "queue database not found"; exit 1; }
+    sqlite3 "$DB"       "update proof_queue set status='PENDING',next_attempt_at=0,last_error=null,last_http_status=null,last_error_code=null where status='DEAD';"
+    echo "Dead-letter proofs returned to PENDING. Verify the underlying issue is corrected."
+    ;;
+  state)
+    cat "$DATA/state.json"
+    ;;
+  api-health)
+    [[ -n "$API_URL" ]] || {
+      echo "Set POWERCHAIN_MINER_API_URL." >&2
+      exit 1
+    }
+    curl --fail --silent --show-error "${API_URL%/}/api/v1/health" | jq .
+    ;;
+  diagnostics)
+    /usr/local/lib/powerchain-miner/diagnostics
+    ;;
+  update-check)
+    [[ -n "$API_URL" ]] || { echo "Set POWERCHAIN_MINER_API_URL." >&2; exit 1; }
+    [[ -n "${POWERCHAIN_UPDATE_PUBLIC_KEY:-}" ]] || {
+      echo "Set POWERCHAIN_UPDATE_PUBLIC_KEY." >&2
+      exit 1
+    }
+    /opt/powerchain-miner/venv/bin/powerchain-miner-update       --api-url "$API_URL"       --public-key "$POWERCHAIN_UPDATE_PUBLIC_KEY"       --channel "${POWERCHAIN_UPDATE_CHANNEL:-stable}"       --platform "${POWERCHAIN_UPDATE_PLATFORM:-linux}"
+    ;;
+  *) usage; exit 1 ;;
+esac

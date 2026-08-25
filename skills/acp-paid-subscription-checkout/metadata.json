@@ -1,0 +1,6 @@
+{
+  "name": "acp-paid-subscription-checkout",
+  "version": "1.0.0",
+  "description": "Terminal-only paid-subscription checkout workflow with explicit authorization, desktop-safe handoff, and redacted evidence.",
+  "entrypoint": "SKILL.md"
+}

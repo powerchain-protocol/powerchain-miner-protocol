@@ -1,0 +1,6 @@
+{
+  "name": "acp-builder-setup",
+  "version": "1.0.0",
+  "description": "Configure PowerChain Agent Compute for Codex or Claude Code using live model discovery and restore-safe local routing.",
+  "entrypoint": "SKILL.md"
+}

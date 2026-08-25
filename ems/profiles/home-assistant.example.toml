@@ -1,0 +1,11 @@
+name = "home-assistant-energy-bridge"
+transport = "http_json"
+
+# Use a deliberately configured local endpoint/proxy that exposes only the required
+# numeric power measurement. Do not place long-lived Home Assistant admin tokens in
+# this repository.
+[source]
+kind = "http_json"
+url = "http://homeassistant.local:8123/api/powerchain/power"
+power_field = "power_w"
+timeout_seconds = 5

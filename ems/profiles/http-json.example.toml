@@ -1,0 +1,8 @@
+name = "ems-http-json"
+transport = "http_json"
+
+[source]
+kind = "http_json"
+url = "https://ems.example.local/api/power"
+power_field = "site.active_power_w"
+timeout_seconds = 5

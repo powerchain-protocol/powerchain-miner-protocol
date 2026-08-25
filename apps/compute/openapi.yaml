@@ -1,0 +1,79 @@
+openapi: 3.1.0
+info:
+  title: PowerChain Agent Compute API
+  version: 1.3.0
+  description: Wallet-funded agent compute data plane.
+servers:
+  - url: https://compute.powerchain.energy
+paths:
+  /health:
+    get:
+      summary: Compute gateway liveness
+      responses:
+        "200": {description: Healthy}
+  /v1/models:
+    get:
+      summary: List currently executable public compute models
+      description: Dynamic discovery endpoint. Agents should validate model ids here rather than hardcoding the bundled catalog.
+      responses:
+        "200":
+          description: OpenAI-style model list with PowerChain discovery metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, name, description, contextLength]
+                      properties:
+                        id: {type: string}
+                        name: {type: string}
+                        description: {type: string}
+                        contextLength: {type: integer, minimum: 1}
+  /v1/account:
+    get:
+      summary: Read the authenticated agent compute account
+      security: [{computeApiKey: []}]
+      responses:
+        "200": {description: Agent, compute policy and balance}
+        "401": {description: Invalid compute API key}
+  /v1/chat/completions:
+    post:
+      summary: OpenAI-compatible non-streaming chat completion
+      security: [{computeApiKey: []}]
+      responses:
+        "200": {description: Chat completion}
+        "401": {description: Invalid compute API key}
+        "402": {description: Insufficient compute credit}
+        "422": {description: Unsupported streaming or output limit}
+  /v1/responses:
+    post:
+      summary: OpenAI-compatible non-streaming Responses request
+      security: [{computeApiKey: []}]
+      responses:
+        "200": {description: Model response}
+        "401": {description: Invalid compute API key}
+        "402": {description: Insufficient compute credit}
+        "422": {description: Unsupported streaming or output limit}
+  /v1/topups/{intentId}/confirm:
+    post:
+      summary: Reconcile a wallet-signed compute top-up
+      security: [{computeApiKey: []}]
+      parameters:
+        - in: path
+          name: intentId
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        "200": {description: Funding transaction verified and credit issued}
+        "409": {description: Funding transaction or intent mismatch}
+components:
+  securitySchemes:
+    computeApiKey:
+      type: http
+      scheme: bearer
+      bearerFormat: pc_compute_*

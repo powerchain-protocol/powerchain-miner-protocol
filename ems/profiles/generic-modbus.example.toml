@@ -1,0 +1,13 @@
+name = "generic-modbus-meter"
+transport = "modbus_tcp"
+
+[source]
+kind = "modbus_tcp"
+host = "192.168.1.60"
+port = 502
+device_id = 1
+
+# Replace from the vendor register map.
+power_register = 0
+power_register_count = 1
+power_scale = 1.0

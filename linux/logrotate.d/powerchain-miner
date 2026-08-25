@@ -1,0 +1,10 @@
+# systemd/journald is the default log sink. This file is reserved for installations
+# that configure an explicit file log under /var/log/powerchain-miner/*.log.
+/var/log/powerchain-miner/*.log {
+  weekly
+  rotate 8
+  compress
+  missingok
+  notifempty
+  copytruncate
+}

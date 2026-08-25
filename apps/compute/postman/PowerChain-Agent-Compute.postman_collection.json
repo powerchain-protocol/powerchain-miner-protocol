@@ -1,0 +1,110 @@
+{
+  "info": {
+    "name": "PowerChain Agent Compute API v1.3",
+    "_postman_id": "powerchain-agent-compute-v13",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://compute.powerchain.energy"
+    },
+    {
+      "key": "computeApiKey",
+      "value": "pc_compute_..."
+    },
+    {
+      "key": "model",
+      "value": "reasoning-large"
+    },
+    {
+      "key": "topupIntentId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Models",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/models"
+      }
+    },
+    {
+      "name": "Account",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{computeApiKey}}"
+          }
+        ],
+        "url": "{{baseUrl}}/v1/account"
+      }
+    },
+    {
+      "name": "Chat Completion",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{computeApiKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"model\": \"{{model}}\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Summarize site status.\"\n    }\n  ],\n  \"max_completion_tokens\": 500,\n  \"stream\": false\n}"
+        },
+        "url": "{{baseUrl}}/v1/chat/completions"
+      }
+    },
+    {
+      "name": "Responses",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{computeApiKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"model\": \"{{model}}\",\n  \"input\": \"Summarize site status.\",\n  \"max_output_tokens\": 500,\n  \"stream\": false\n}"
+        },
+        "url": "{{baseUrl}}/v1/responses"
+      }
+    },
+    {
+      "name": "Confirm Top Up",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{computeApiKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"signature\": \"<solana-signature>\"\n}"
+        },
+        "url": "{{baseUrl}}/v1/topups/{{topupIntentId}}/confirm"
+      }
+    }
+  ]
+}

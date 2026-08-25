@@ -1,0 +1,12 @@
+{
+  "sequence": 42,
+  "observedAt": "2026-08-24T12:00:00Z",
+  "renewableType": "solar",
+  "energyDeltaWh": 1250,
+  "averagePowerW": 7500,
+  "sampleCount": 12,
+  "source": "modbus_tcp",
+  "qualityBps": 10000,
+  "sourceHash": "b8d88f4411d2023bc2e6a4459c78a626ad7f4aa1ba9f3aadccd2e8cb7f891493",
+  "previousDigest": "1d9abf557a6c98b3ac24226e7be2d6dc44df31ba0a59bfa4dbb388e20f199b3a"
+}

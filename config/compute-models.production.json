@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "source": "PowerChain Agent Compute production catalog",
+  "models": [
+    {
+      "id": "venice-uncensored-1-2",
+      "name": "Venice Uncensored 1.2",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 128000
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "Claude Opus 4.7",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 1000000
+    },
+    {
+      "id": "claude-opus-4-7-fast",
+      "name": "Claude Opus 4.7 Fast",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 1000000
+    },
+    {
+      "id": "claude-opus-4-8",
+      "name": "Claude Opus 4.8",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 1000000
+    },
+    {
+      "id": "claude-sonnet-4-6",
+      "name": "Claude Sonnet 4.6",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 1000000
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 1000000
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 1000000
+    },
+    {
+      "id": "minimax-m27",
+      "name": "MiniMax M2.7",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 198000
+    },
+    {
+      "id": "minimax-m3",
+      "name": "MiniMax M3",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 500000
+    },
+    {
+      "id": "openai-gpt-54-mini",
+      "name": "GPT-5.4 Mini",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 400000
+    },
+    {
+      "id": "openai-gpt-55",
+      "name": "GPT-5.5",
+      "description": "GPT-5.5 is a frontier model in the GPT-5 series.",
+      "contextLength": 1000000
+    },
+    {
+      "id": "openai-gpt-55-pro",
+      "name": "GPT-5.5 Pro",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 1000000
+    },
+    {
+      "id": "xiaomi-mimo-v2-5",
+      "name": "MiMo-V2.5",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 1000000
+    },
+    {
+      "id": "zai-org-glm-4.6",
+      "name": "GLM 4.6",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 198000
+    },
+    {
+      "id": "zai-org-glm-5-1",
+      "name": "GLM 5.1",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 200000
+    },
+    {
+      "id": "zai-org-glm-5-2",
+      "name": "GLM 5.2",
+      "description": "Available through PowerChain Agent Compute.",
+      "contextLength": 1000000
+    }
+  ]
+}

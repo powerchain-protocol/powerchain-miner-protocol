@@ -1,0 +1,21 @@
+{
+  "name": "PowerChain Miner",
+  "symbol": "MINER",
+  "description": "Reward token for verified work performed by registered PowerChain hardware miner nodes.",
+  "image": "https://example.invalid/assets/miner.png",
+  "external_url": "https://example.invalid/miner",
+  "attributes": [
+    {
+      "trait_type": "Network",
+      "value": "Solana"
+    },
+    {
+      "trait_type": "Token Program",
+      "value": "Token-2022"
+    },
+    {
+      "trait_type": "Purpose",
+      "value": "Verified hardware work rewards"
+    }
+  ]
+}

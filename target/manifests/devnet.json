@@ -1,0 +1,14 @@
+{
+  "cluster": "devnet",
+  "programId": null,
+  "minerMint": null,
+  "treasuryVault": null,
+  "verifier": null,
+  "deployedAt": null,
+  "verified": false,
+  "manifestVersion": 1,
+  "sourceCommit": null,
+  "idlSha256": null,
+  "programBinarySha256": null,
+  "verifiedAt": null
+}
